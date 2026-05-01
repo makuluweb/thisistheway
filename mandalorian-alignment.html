@@ -284,7 +284,7 @@
     background: transparent; border: 1px dashed var(--border); color: var(--text-dim);
     padding: 7px 14px; font-family: var(--font-display); font-size: 8px;
     letter-spacing: 0.15em; cursor: pointer; text-transform: uppercase;
-    transition: all 0.2s; margin-top: 6px;
+    transition: all 0.2s; margin-top: 6px; width: 100%;
   }
   .add-action-btn:hover { border-color: var(--beskar-dark); color: var(--beskar); }
   .del-btn {
@@ -357,7 +357,7 @@
 
 <script>
 // ── CONFIG ── Replace with your API key from console.anthropic.com
-const API_KEY = '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;
+const API_KEY = 'YOUR_API_KEY_HERE';
 
 const SYSTEM_PROMPT = `You are an executive facilitation specialist trained in consultative dialogue and the Never Split the Difference framework. Support a 30-minute structured executive conversation through ALIGN → EXPLORE → CHALLENGE → COMMIT phases.
 
@@ -449,7 +449,7 @@ function renderContent() {
       </div>
       <div class="mb-20">
         <div class="field-label">MISSION BRIEF — PROBLEM STATEMENT</div>
-        <textarea rows="4" id="problem-input" placeholder="Describe the core problem, tension, or decision that must be resolved. Be specific. What is at stake? Who is affected?">${escHtml(state.problemStatement)}</textarea>
+        <textarea rows="4" id="problem-input" placeholder="Describe the core problem, tension, or decision that must be resolved. Be specific. What is at stake? Who is affected?"></textarea>
         <div style="font-size:10px;color:var(--text-dim);margin-top:6px;font-family:var(--font-mono);">// Specificity is your beskar. Vague problems yield vague outcomes.</div>
       </div>
       <button class="ai-btn" id="opener-btn" onclick="generateOpener()" ${!state.problemStatement.trim() ? 'disabled' : ''}>GENERATE OPENING STRIKE</button>
@@ -466,7 +466,9 @@ function renderContent() {
         ${[['ALIGN','Establish shared understanding of the problem and its stakes'],['EXPLORE','Surface possibilities, perspectives, and underlying interests'],['CHALLENGE','Test assumptions and stress-test options with tactical empathy'],['COMMIT','Synthesise to a clear decision, commitment statement, and next actions']].map(([k,v]) => `
           <div class="flow-row"><div class="flow-phase">${k}</div><div class="flow-desc">${v}</div></div>`).join('')}
       </div>`;
-    document.getElementById('problem-input').addEventListener('input', e => {
+    const probTA = document.getElementById('problem-input');
+    probTA.value = state.problemStatement;
+    probTA.addEventListener('input', e => {
       state.problemStatement = e.target.value;
       document.getElementById('opener-btn').disabled = !e.target.value.trim();
     });
@@ -475,6 +477,8 @@ function renderContent() {
 
   if (state.phase === 'commit') {
     const ai = state.aiResponses.commit;
+    const loadingCommitIntel = state.loading['commit-intel'];
+    const loadingCommitStmt  = state.loading['commit-stmt'];
     el.innerHTML = `
       <div class="phase-header">
         <div class="phase-icon-large">${ph.glyph}</div>
@@ -482,16 +486,16 @@ function renderContent() {
       </div>
       <div class="mb-20">
         <div class="field-label">MISSION DEBRIEF NOTES</div>
-        <textarea rows="3" id="commit-notes" placeholder="What is being agreed? What has shifted? What does everyone now understand?">${escHtml(state.notes.commit)}</textarea>
+        <textarea rows="3" id="commit-notes" placeholder="What is being agreed? What has shifted? What does everyone now understand?"></textarea>
       </div>
       <div class="flex-gap mb-14">
-        <button class="ai-btn" id="commit-ai-btn" onclick="getAI('commit')" ${state.loading.commit ? 'disabled' : ''}>${state.loading.commit ? '<span class="loading-pulse">SCANNING...</span>' : 'INTEL INSIGHT'}</button>
-        <button class="ai-btn" id="commit-stmt-btn" onclick="generateCommitment()" ${state.loading.commit2 ? 'disabled' : ''}>${state.loading.commit2 ? '<span class="loading-pulse">DRAFTING...</span>' : 'DRAFT COMMITMENT'}</button>
+        <button class="ai-btn" id="commit-ai-btn" onclick="getAI('commit')" ${loadingCommitIntel ? 'disabled' : ''}>${loadingCommitIntel ? '<span class="loading-pulse">SCANNING...</span>' : 'INTEL INSIGHT'}</button>
+        <button class="ai-btn" id="commit-stmt-btn" onclick="generateCommitment()" ${loadingCommitStmt ? 'disabled' : ''}>${loadingCommitStmt ? '<span class="loading-pulse">DRAFTING...</span>' : 'DRAFT COMMITMENT'}</button>
       </div>
       ${ai ? renderIntelPanel(ai, 'TACTICAL ANALYSIS') : ''}
       ${state.commitmentStatement ? `
         <div class="intel-panel" style="border-left-color:var(--mandalore-gold);">
-          <div class="intel-header">◉ COMMITMENT STATEMENT — LOCKED</div>
+          <div class="intel-header">&#9673; COMMITMENT STATEMENT &#8212; LOCKED</div>
           <div class="intel-body"><div class="commit-box">"${escHtml(state.commitmentStatement)}"</div></div>
         </div>` : ''}
       <div class="mt-16">
@@ -499,7 +503,9 @@ function renderContent() {
         <div id="actions-list"></div>
         <button class="add-action-btn" onclick="addAction()">+ ASSIGN ORDER</button>
       </div>`;
-    document.getElementById('commit-notes').addEventListener('input', e => { state.notes.commit = e.target.value; });
+    const commitTA = document.getElementById('commit-notes');
+    commitTA.value = state.notes.commit;
+    commitTA.addEventListener('input', e => { state.notes.commit = e.target.value; });
     renderActions();
     return;
   }
@@ -515,20 +521,25 @@ function renderContent() {
     ${cues.length ? `
       <div class="mb-14">
         <div class="field-label">TACTICAL CUES</div>
-        <div class="cue-grid">${cues.map(c => `<div class="cue-chip">${c}</div>`).join('')}</div>
+        <div class="cue-grid">${cues.map(c => `<div class="cue-chip">${escHtml(c)}</div>`).join('')}</div>
       </div>` : ''}
     <div class="mb-20">
       <div class="field-label">FIELD NOTES</div>
-      <textarea rows="4" id="phase-notes" placeholder="Capture what's said, what's felt, what matters most...">${escHtml(state.notes[state.phase])}</textarea>
+      <textarea rows="4" id="phase-notes" placeholder="Capture what's said, what's felt, what matters most..."></textarea>
     </div>
-    <button class="ai-btn" id="ai-btn" onclick="getAI('${state.phase}')" ${loading || !state.notes[state.phase]?.trim() ? 'disabled' : ''}>${loading ? '<span class="loading-pulse">SCANNING INTEL...</span>' : 'GET INTEL ANALYSIS'}</button>
-    ${ai ? renderIntelPanel(ai, 'TACTICAL ANALYSIS — ' + state.phase.toUpperCase()) : ''}`;
+    <button class="ai-btn" id="ai-btn" onclick="getAI('${state.phase}')" ${loading ? 'disabled' : ''}>${loading ? '<span class="loading-pulse">SCANNING INTEL...</span>' : 'GET INTEL ANALYSIS'}</button>
+    ${ai ? renderIntelPanel(ai, 'TACTICAL ANALYSIS &#8212; ' + state.phase.toUpperCase()) : ''}`;
 
-  document.getElementById('phase-notes').addEventListener('input', e => {
+  const notesTA = document.getElementById('phase-notes');
+  notesTA.value = state.notes[state.phase];
+  notesTA.addEventListener('input', e => {
     state.notes[state.phase] = e.target.value;
     const btn = document.getElementById('ai-btn');
-    if (btn) btn.disabled = !e.target.value.trim();
+    if (btn) btn.disabled = !e.target.value.trim() || !!state.loading[state.phase];
   });
+  // Set initial button disabled state correctly
+  const aiBtn = document.getElementById('ai-btn');
+  if (aiBtn) aiBtn.disabled = !state.notes[state.phase].trim() || !!loading;
 }
 
 function renderIntelPanel(ai, label) {
@@ -548,15 +559,24 @@ function renderActions() {
   if (!el) return;
   el.innerHTML = state.actions.map((a, i) => `
     <div class="action-row">
-      <input type="text" placeholder="Order..." value="${escHtml(a.what)}" oninput="state.actions[${i}].what=this.value" />
-      <input type="text" placeholder="Assigned to" value="${escHtml(a.who)}" oninput="state.actions[${i}].who=this.value" />
-      <input type="text" placeholder="By when" value="${escHtml(a.by)}" oninput="state.actions[${i}].by=this.value" />
-      <button class="del-btn" onclick="removeAction(${i})">×</button>
+      <input type="text" id="act-what-${i}" placeholder="Order..." />
+      <input type="text" id="act-who-${i}" placeholder="Assigned to" />
+      <input type="text" id="act-by-${i}" placeholder="By when" />
+      <button class="del-btn" onclick="removeAction(${i})">&#215;</button>
     </div>`).join('');
+  // Set values via JS to avoid HTML escaping issues
+  state.actions.forEach((a, i) => {
+    const wEl = document.getElementById(`act-what-${i}`);
+    const pEl = document.getElementById(`act-who-${i}`);
+    const bEl = document.getElementById(`act-by-${i}`);
+    if (wEl) { wEl.value = a.what; wEl.addEventListener('input', e => { state.actions[i].what = e.target.value; }); }
+    if (pEl) { pEl.value = a.who;  pEl.addEventListener('input', e => { state.actions[i].who  = e.target.value; }); }
+    if (bEl) { bEl.value = a.by;   bEl.addEventListener('input', e => { state.actions[i].by   = e.target.value; }); }
+  });
 }
 
 function addAction() { state.actions.push({ what: '', who: '', by: '' }); renderActions(); }
-function removeAction(i) { state.actions.splice(i, 1); renderContent(); }
+function removeAction(i) { state.actions.splice(i, 1); renderActions(); }
 
 // ── AI CALLS ──
 const PROMPTS = {
@@ -567,11 +587,12 @@ const PROMPTS = {
 };
 
 async function getAI(phase) {
-  state.loading[phase] = true;
+  const loadKey = phase === 'commit' ? 'commit-intel' : phase;
+  state.loading[loadKey] = true;
   renderContent();
   const result = await callAI(PROMPTS[phase]());
   if (result) state.aiResponses[phase] = result;
-  state.loading[phase] = false;
+  state.loading[loadKey] = false;
   renderContent();
 }
 
@@ -584,11 +605,11 @@ async function generateOpener() {
 }
 
 async function generateCommitment() {
-  state.loading.commit2 = true;
+  state.loading['commit-stmt'] = true;
   renderContent();
   const result = await callAI(`Problem: "${state.problemStatement}"\nAll session notes:\nALIGN: "${state.notes.align}"\nEXPLORE: "${state.notes.explore}"\nCHALLENGE: "${state.notes.challenge}"\nCOMMIT: "${state.notes.commit}"\n\nWrite a clear specific commitment statement (2-3 sentences) capturing what was agreed, why it matters, and what success looks like. Return JSON: { "insight": "the commitment statement", "suggestion": "key risk to watch", "nextQuestion": "accountability question" }`);
   if (result) state.commitmentStatement = result.insight;
-  state.loading.commit2 = false;
+  state.loading['commit-stmt'] = false;
   renderContent();
 }
 
@@ -683,8 +704,23 @@ function exportSession() {
 }
 
 // ── UTILS ──
+// escHtml: safe for innerHTML contexts. For textarea .value, set directly via JS (not innerHTML).
 function escHtml(str) {
-  return String(str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  return String(str || '')
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;')
+    .replace(/'/g,'&#39;');
+}
+// escAttr: safe for attribute values like value="..."
+function escAttr(str) {
+  return String(str || '')
+    .replace(/&/g,'&amp;')
+    .replace(/"/g,'&quot;')
+    .replace(/'/g,'&#39;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;');
 }
 
 // ── INIT ──
