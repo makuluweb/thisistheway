@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ambition — KPMG Coaching Protocol</title>
+<title>Ambition — Bomber's Coaching & Leadership</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
 <style>
 /* ═══════════════════════════════════════════
@@ -1158,7 +1158,7 @@ body{
 
   <div class="auth-left">
     <div class="auth-brand">
-      <div class="auth-kpmg-wordmark">KPMG</div>
+      <div class="auth-kpmg-wordmark">Bomber's</div>
       <div class="auth-kpmg-tagline">Coaching & Leadership</div>
     </div>
 
@@ -1218,8 +1218,8 @@ body{
   <!-- TOPBAR -->
   <div id="topbar">
     <div class="top-brand">
-      <div class="top-kpmg">KPMG</div>
-      <div class="top-app-name">Ambition</div>
+      <div class="top-kpmg">Bomber's</div>
+      <div class="top-app-name">Coaching & Leadership</div>
     </div>
 
     <nav class="top-nav">
@@ -2011,7 +2011,7 @@ function renderPathway() {
   ph.innerHTML = `${avatarHtml}
     <div style="flex:1;">
       <h2>${esc(state.profile.name||'Ambition Pathway')}</h2>
-      <div style="font-size:.78rem;color:rgba(255,255,255,.55);margin-top:2px;">${esc([state.profile.role,state.profile.org].filter(Boolean).join(' · ')||'KPMG Ambition Coaching')}</div>
+      <div style="font-size:.78rem;color:rgba(255,255,255,.55);margin-top:2px;">${esc([state.profile.role,state.profile.org].filter(Boolean).join(' · ')||'Bomber\'s Coaching & Leadership')}</div>
     </div>
     <span class="pill" style="background:rgba(255,255,255,.12);color:rgba(255,255,255,.8);">${new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'})}</span>`;
   c.appendChild(ph);
@@ -2140,7 +2140,7 @@ async function aiAdvise(type, mode) {
     }
   };
 
-  const sys = `You are a senior KPMG executive coach helping a leader build ambitious goals and accountability. Be direct, specific, and concise (3–5 sentences). Never give generic advice — respond only to this person's actual content. Write in confident flowing prose, no bullet points.`;
+  const sys = `You are a senior executive coach at Bomber's Coaching & Leadership, helping a leader build ambitious goals and accountability. Be direct, specific, and concise (3–5 sentences). Never give generic advice — respond only to this person's actual content. Write in confident flowing prose, no bullet points.`;
 
   try {
     const res = await fetch('https://api.anthropic.com/v1/messages', {
@@ -2481,7 +2481,7 @@ function exportWord() {
     const children = [];
 
     // Header
-    children.push(p([t('KPMG', { bold:true, size:36, color:PRIMARY })], { spacing:{after:60} }));
+    children.push(p([t("Bomber's Coaching & Leadership", { bold:true, size:36, color:PRIMARY })], { spacing:{after:60} }));
     children.push(p([t('Ambition Coaching', { size:22, color:GREYMID, italics:true })], { spacing:{after:40} }));
     children.push(p([], { border:{bottom:{style:BorderStyle.SINGLE,size:12,color:PRIMARY,space:1}}, spacing:{after:240} }));
 
@@ -2581,7 +2581,7 @@ function exportPDF() {
     const name = state.profile.name || 'Ambition Pathway';
     const w = window.open('', '_blank');
     w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8">
-    <title>${esc(name)} — KPMG Ambition Pathway</title>
+    <title>${esc(name)} — Ambition Pathway</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
     <style>
       :root{--kpmg-blue:#00338D;--kpmg-blue-mid:#0047BB;--kpmg-blue-light:#0091DA;--kpmg-blue-pale:#E8F0FB;--kpmg-teal-light:#00A3A1;--kpmg-violet:#6D2077;--white:#FFFFFF;--grey-50:#FAFAFA;--grey-100:#F5F5F5;--grey-200:#EEEEEE;--grey-400:#BDBDBD;--grey-500:#9E9E9E;--grey-600:#757575;--grey-700:#616161;--grey-800:#424242;--grey-900:#212121;}
@@ -2618,7 +2618,7 @@ function exportPDF() {
       .btn-icon{display:none;}
     </style></head><body>
     <div class="kpmg-header">
-      <div><div class="kpmg-wordmark">KPMG</div><div style="font-family:'DM Serif Display',serif;font-size:.9rem;font-style:italic;color:var(--grey-600);margin-top:2px;">Ambition Coaching</div></div>
+      <div><div class="kpmg-wordmark">Bomber's</div><div style="font-family:'DM Serif Display',serif;font-size:.9rem;font-style:italic;color:var(--grey-600);margin-top:2px;">Coaching & Leadership</div></div>
       <div class="kpmg-meta"><div style="font-weight:600;color:var(--grey-700);">Ambition Pathway</div><div>${new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'})}</div></div>
     </div>
     ${content}
