@@ -1156,7 +1156,8 @@ body::after{
       <button class="cmd-btn" onclick="exportJSON()">↓ BACKUP</button>
       <button class="cmd-btn" onclick="document.getElementById('import-file').click()">↑ RESTORE</button>
       <input type="file" id="import-file" accept=".json" style="display:none" onchange="importJSON(event)">
-      <button class="cmd-btn" onclick="exportPDF()">⎙ EXPORT</button>
+      <button class="cmd-btn" onclick="exportWord()">⬇ WORD</button>
+      <button class="cmd-btn" onclick="exportPDF()">⎙ PDF</button>
       <div class="profile-chip" onclick="openProfile()">
         <div class="profile-avatar" id="avatar-cmd">?</div>
         <span class="profile-chip-name" id="cmd-name">OPERATIVE</span>
@@ -1319,7 +1320,10 @@ body::after{
           <div class="section-title">Mission Pathway</div>
           <div class="section-desc">The complete strategic alignment map</div>
         </div>
-        <button class="nav-btn primary" onclick="exportPDF()" style="margin-left:auto;">⎙ EXPORT</button>
+        <div style="display:flex;gap:8px;margin-left:auto;">
+          <button class="nav-btn secondary" onclick="exportWord()" style="padding:8px 16px;">⬇ WORD</button>
+          <button class="nav-btn primary" onclick="exportPDF()">⎙ EXPORT</button>
+        </div>
       </div>
       <div class="section-rule"></div>
 
@@ -1694,9 +1698,15 @@ function renderIntentions() {
       </div>
       <div class="tac-card-body collapsible">
         <div id="intent-list-${a.id}">${intentRowsHtml}</div>
-        <button class="add-btn" onclick="addIntention('${a.id}')">
-          <span class="plus-icon">+</span> ADD INTENTION
-        </button>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:4px;">
+          <button class="add-btn" style="flex:1;min-width:160px;" onclick="addIntention('${a.id}')">
+            <span class="plus-icon">+</span> ADD INTENTION
+          </button>
+          <button class="add-btn" style="flex:1;min-width:160px;border-color:var(--amber-dim);color:var(--amber);" onclick="suggestIntentions('${a.id}')">
+            🐸 SUGGEST INTENTIONS
+          </button>
+        </div>
+        <div id="suggest-int-panel-${a.id}" style="display:none;"></div>
       </div>`;
     c.appendChild(div);
     autoResizeTextareas(div);
@@ -1838,9 +1848,15 @@ function renderActions() {
         </div>
         <div class="tac-card-body collapsible">
           <div id="act-list-${intent.id}">${actCardsHtml}</div>
-          <button class="add-btn" onclick="addAction('${intent.id}')">
-            <span class="plus-icon">+</span> ADD ACTION
-          </button>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:4px;">
+            <button class="add-btn" style="flex:1;min-width:160px;" onclick="addAction('${intent.id}')">
+              <span class="plus-icon">+</span> ADD ACTION
+            </button>
+            <button class="add-btn" style="flex:1;min-width:160px;border-color:var(--green-dim);color:var(--green);" onclick="suggestActions('${intent.id}','${a.id}')">
+              🐸 SUGGEST ACTIONS
+            </button>
+          </div>
+          <div id="suggest-act-panel-${intent.id}" style="display:none;"></div>
         </div>`;
       ambDiv.appendChild(icard);
       autoResizeTextareas(icard);
@@ -1848,6 +1864,132 @@ function renderActions() {
 
     c.appendChild(ambDiv);
   });
+}
+
+/* ═══════════════════════════════════════
+   GROGU SUGGESTIONS — PER AMBITION / INTENTION
+═══════════════════════════════════════ */
+let _suggestPending = {};
+
+async function suggestIntentions(ambitionId) {
+  const panel = document.getElementById('suggest-int-panel-' + ambitionId);
+  if (!panel) return;
+  const a = state.ambitions.find(x => x.id === ambitionId);
+  if (!a) return;
+
+  panel.style.display = 'block';
+  panel.innerHTML = `<div style="margin-top:12px;padding:12px 14px;background:var(--cyan-faint);border:1px solid var(--cyan-dim);display:flex;align-items:center;gap:8px;font-family:var(--font-mono);font-size:.65rem;color:var(--cyan);">
+    <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+    <span style="margin-left:4px;">GROGU PROCESSING…</span>
+  </div>`;
+
+  const existing = state.intentions.filter(i => i.ambitionId === ambitionId).map(i => `- ${i.text}`).join('\n') || 'none yet';
+  const prompt = `You are an executive coach. For the ambition below, suggest exactly 3 distinct intentional behaviours or mindset shifts that would drive success. Each should be specific, observable, and actionable. Return ONLY a JSON array of 3 strings, no other text, no markdown, no explanation.\n\nAmbition: "${a.title}"\nContext: ${a.context||'not provided'}\nGuardrails: ${a.guardrails.filter(Boolean).join(', ')||'none'}\nExisting intentions: ${existing}`;
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method:'POST',
+      headers:{ 'Content-Type':'application/json', 'x-api-key':API_KEY, 'anthropic-version':'2023-06-01', 'anthropic-dangerous-direct-browser-access':'true' },
+      body: JSON.stringify({ model:'claude-sonnet-4-5', max_tokens:600, messages:[{ role:'user', content:prompt }] })
+    });
+    const data = await res.json();
+    if (data.error) { panel.innerHTML = `<div style="color:var(--red);font-family:var(--font-mono);font-size:.65rem;padding:10px;">⚠ ${data.error.message}</div>`; return; }
+    const raw = data.content?.find(b=>b.type==='text')?.text || '[]';
+    let suggestions;
+    try { suggestions = JSON.parse(raw.replace(/```json|```/g,'').trim()); } catch { suggestions = [raw]; }
+    _suggestPending[ambitionId] = { suggestions, type:'intention', ambitionId };
+    renderSuggestionPanel(panel, suggestions, ambitionId, 'intention');
+  } catch(e) {
+    panel.innerHTML = `<div style="color:var(--red);font-family:var(--font-mono);font-size:.65rem;padding:10px;">⚠ Could not reach Grogu.</div>`;
+  }
+}
+
+async function suggestActions(intentionId, ambitionId) {
+  const panel = document.getElementById('suggest-act-panel-' + intentionId);
+  if (!panel) return;
+  const a = state.ambitions.find(x => x.id === ambitionId);
+  const intent = state.intentions.find(x => x.id === intentionId);
+  if (!intent) return;
+
+  panel.style.display = 'block';
+  panel.innerHTML = `<div style="margin-top:12px;padding:12px 14px;background:rgba(0,229,122,0.05);border:1px solid var(--green-dim);display:flex;align-items:center;gap:8px;font-family:var(--font-mono);font-size:.65rem;color:var(--green);">
+    <div class="dot" style="background:var(--green);"></div><div class="dot" style="background:var(--green);"></div><div class="dot" style="background:var(--green);"></div>
+    <span style="margin-left:4px;">GROGU PROCESSING…</span>
+  </div>`;
+
+  const existing = state.actions.filter(x => x.intentionId === intentionId).map(x => `- ${x.title}`).join('\n') || 'none yet';
+  const prompt = `You are an executive coach. Suggest exactly 3 specific, concrete actions to deliver on this intention. Each action should be a short, clear title (max 10 words). Return ONLY a JSON array of 3 strings, no other text.\n\nAmbition: "${a?.title||''}"\nIntention: "${intent.text}"\nExisting actions: ${existing}`;
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method:'POST',
+      headers:{ 'Content-Type':'application/json', 'x-api-key':API_KEY, 'anthropic-version':'2023-06-01', 'anthropic-dangerous-direct-browser-access':'true' },
+      body: JSON.stringify({ model:'claude-sonnet-4-5', max_tokens:400, messages:[{ role:'user', content:prompt }] })
+    });
+    const data = await res.json();
+    if (data.error) { panel.innerHTML = `<div style="color:var(--red);font-family:var(--font-mono);font-size:.65rem;padding:10px;">⚠ ${data.error.message}</div>`; return; }
+    const raw = data.content?.find(b=>b.type==='text')?.text || '[]';
+    let suggestions;
+    try { suggestions = JSON.parse(raw.replace(/```json|```/g,'').trim()); } catch { suggestions = [raw]; }
+    _suggestPending[intentionId] = { suggestions, type:'action', intentionId, ambitionId };
+    renderSuggestionPanel(panel, suggestions, intentionId, 'action');
+  } catch(e) {
+    panel.innerHTML = `<div style="color:var(--red);font-family:var(--font-mono);font-size:.65rem;padding:10px;">⚠ Could not reach Grogu.</div>`;
+  }
+}
+
+function renderSuggestionPanel(panel, suggestions, id, type) {
+  const isAction = type === 'action';
+  const accent = isAction ? 'var(--green)' : 'var(--cyan)';
+  const accentDim = isAction ? 'var(--green-dim)' : 'var(--cyan-dim)';
+  const accentFaint = isAction ? 'rgba(0,229,122,0.05)' : 'var(--cyan-faint)';
+
+  const items = suggestions.map((s, i) => `
+    <label style="display:flex;align-items:flex-start;gap:10px;padding:10px 12px;background:var(--surface);border:1px solid var(--border);cursor:pointer;margin-bottom:6px;transition:border-color .15s;"
+      onmouseover="this.style.borderColor='${accentDim}'" onmouseout="this.style.borderColor='var(--border)'">
+      <input type="checkbox" id="sug-${id}-${i}" style="margin-top:3px;accent-color:${accent};flex-shrink:0;">
+      <span style="font-family:var(--font-body);font-size:.85rem;color:var(--text);line-height:1.5;">${esc(s)}</span>
+    </label>`).join('');
+
+  panel.innerHTML = `
+    <div style="margin-top:12px;padding:14px;background:${accentFaint};border:1px solid ${accentDim};border-left:2px solid ${accent};">
+      <div style="font-family:var(--font-mono);font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:${accent};margin-bottom:12px;">🐸 GROGU SUGGESTS — SELECT TO ADD</div>
+      ${items}
+      <div style="display:flex;gap:8px;margin-top:10px;justify-content:flex-end;">
+        <button class="nav-btn secondary" style="padding:6px 14px;font-size:.6rem;" onclick="dismissSuggestions('${id}','${type}')">DISMISS</button>
+        <button class="nav-btn primary" style="padding:6px 14px;font-size:.6rem;border-color:${accentDim};color:${accent};" onclick="addSelectedSuggestions('${id}','${type}')">ADD SELECTED</button>
+      </div>
+    </div>`;
+}
+
+function addSelectedSuggestions(id, type) {
+  const data = _suggestPending[id];
+  if (!data) return;
+  let added = 0;
+  data.suggestions.forEach((s, i) => {
+    const cb = document.getElementById(`sug-${id}-${i}`);
+    if (cb && cb.checked) {
+      if (type === 'intention') {
+        state.intentions.push({ id:'i'+Date.now()+i, ambitionId:data.ambitionId, text:s });
+      } else {
+        state.actions.push({ id:'ac'+Date.now()+i, intentionId:data.intentionId, ambitionId:data.ambitionId, title:s, description:'', outcome:'', startDate:'', endDate:'', status:'planned' });
+      }
+      added++;
+    }
+  });
+  if (added === 0) { showToast('Select at least one suggestion first.'); return; }
+  save();
+  delete _suggestPending[id];
+  showToast(`✅ Added ${added} ${type}${added>1?'s':''}.`);
+  if (type === 'intention') { renderIntentions(); renderAmbitions(); }
+  else { renderActions(); }
+}
+
+function dismissSuggestions(id, type) {
+  delete _suggestPending[id];
+  const panelId = type === 'intention' ? 'suggest-int-panel-'+id : 'suggest-act-panel-'+id;
+  const p = document.getElementById(panelId);
+  if (p) p.style.display = 'none';
 }
 
 /* ═══════════════════════════════════════
@@ -2069,50 +2211,75 @@ function saveGrogu(step, saveAs) {
   }
 }
 
+// Pending picker state — never embed AI text in onclick attributes
+let _pendingText = '';
+let _pendingSaveAs = '';
+
 function showAmbPicker(text, saveAs) {
+  _pendingText = text;
+  _pendingSaveAs = saveAs;
   const opts = state.ambitions.map((a,i)=>`<option value="${a.id}">Ambition ${i+1}: ${(a.title||'Untitled').substring(0,40)}</option>`).join('');
   const el = document.createElement('div');
+  el.id = 'grogu-picker-overlay';
   el.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:999;display:flex;align-items:center;justify-content:center;';
   el.innerHTML=`<div style="background:var(--panel);border:1px solid var(--border2);padding:28px;width:min(420px,92vw);clip-path:polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,0 100%);">
     <div style="font-family:var(--font-head);font-size:.8rem;color:var(--cyan);letter-spacing:.1em;margin-bottom:16px;">LINK TO WHICH AMBITION?</div>
     <select id="amb-pick" style="width:100%;padding:10px;background:var(--deep);border:1px solid var(--border2);color:var(--white);font-family:var(--font-body);margin-bottom:16px;">${opts}</select>
     <div style="display:flex;gap:8px;justify-content:flex-end;">
-      <button class="nav-btn secondary" style="padding:7px 16px;" onclick="this.closest('[style*=fixed]').remove()">CANCEL</button>
-      <button class="nav-btn primary" style="padding:7px 16px;" onclick="confirmAmbPick('${saveAs}','${escA(text)}',this)">SAVE</button>
+      <button class="nav-btn secondary" style="padding:7px 16px;" onclick="closeGroguPicker()">CANCEL</button>
+      <button class="nav-btn primary" style="padding:7px 16px;" onclick="confirmAmbPick()">SAVE</button>
     </div></div>`;
   document.body.appendChild(el);
 }
 
-function confirmAmbPick(saveAs, text, btn) {
+function closeGroguPicker() {
+  const el = document.getElementById('grogu-picker-overlay');
+  if (el) el.remove();
+}
+
+function confirmAmbPick() {
   const ambId = document.getElementById('amb-pick').value;
-  if (saveAs==='guardrail') { const a=state.ambitions.find(x=>x.id===ambId); if(a){a.guardrails.push(text);save();renderAmbitions();} showToast('✅ Saved as Guardrail.'); }
-  else if (saveAs==='intention') { state.intentions.push({id:'i'+Date.now(),ambitionId:ambId,text});save();showToast('✅ Saved as Intention.'); }
-  btn.closest('[style*="position:fixed"]').remove();
+  const text = _pendingText;
+  const saveAs = _pendingSaveAs;
+  if (saveAs==='guardrail') {
+    const a=state.ambitions.find(x=>x.id===ambId);
+    if(a){a.guardrails.push(text);save();renderAmbitions();}
+    showToast('✅ Saved as Guardrail.');
+  } else if (saveAs==='intention') {
+    state.intentions.push({id:'i'+Date.now(),ambitionId:ambId,text});
+    save();
+    showToast('✅ Saved as Intention.');
+  }
+  closeGroguPicker();
 }
 
 function showIntPicker(text) {
+  _pendingText = text;
   const opts = state.intentions.map((int,i)=>{
     const a=state.ambitions.find(a=>a.id===int.ambitionId);
     return `<option value="${int.id}">${a?(a.title||'Untitled').substring(0,24)+' › ':''} ${(int.text||'Untitled').substring(0,36)}</option>`;
   }).join('');
   const el = document.createElement('div');
+  el.id = 'grogu-picker-overlay';
   el.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:999;display:flex;align-items:center;justify-content:center;';
   el.innerHTML=`<div style="background:var(--panel);border:1px solid var(--border2);padding:28px;width:min(440px,92vw);clip-path:polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,0 100%);">
     <div style="font-family:var(--font-head);font-size:.8rem;color:var(--cyan);letter-spacing:.1em;margin-bottom:16px;">LINK ACTION TO WHICH INTENTION?</div>
     <select id="int-pick" style="width:100%;padding:10px;background:var(--deep);border:1px solid var(--border2);color:var(--white);font-family:var(--font-body);margin-bottom:16px;">${opts}</select>
     <div style="display:flex;gap:8px;justify-content:flex-end;">
-      <button class="nav-btn secondary" style="padding:7px 16px;" onclick="this.closest('[style*=fixed]').remove()">CANCEL</button>
-      <button class="nav-btn primary" style="padding:7px 16px;" onclick="confirmIntPick('${escA(text)}',this)">SAVE</button>
+      <button class="nav-btn secondary" style="padding:7px 16px;" onclick="closeGroguPicker()">CANCEL</button>
+      <button class="nav-btn primary" style="padding:7px 16px;" onclick="confirmIntPick()">SAVE</button>
     </div></div>`;
   document.body.appendChild(el);
 }
 
-function confirmIntPick(text, btn) {
+function confirmIntPick() {
   const iid = document.getElementById('int-pick').value;
   const intent = state.intentions.find(i=>i.id===iid);
+  const text = _pendingText;
   state.actions.push({id:'ac'+Date.now(),intentionId:iid,ambitionId:intent?intent.ambitionId:'',title:text.substring(0,80),description:text,outcome:'',startDate:'',endDate:'',status:'planned'});
-  save(); showToast('✅ Saved as Action — visible in Step 03.');
-  btn.closest('[style*="position:fixed"]').remove();
+  save();
+  showToast('✅ Saved as Action — visible in Step 03.');
+  closeGroguPicker();
 }
 
 function removeGroguCommentary(id) {
@@ -2233,6 +2400,126 @@ function importJSON(e) {
     } catch { alert('Could not read file.'); }
   };
   r.readAsText(f);
+}
+
+function exportWord() {
+  showToast('⏳ Building Word document…');
+  function buildAndDownload() {
+    const { Document, Packer, Paragraph, TextRun, Table, TableRow, TableCell,
+            BorderStyle, WidthType, ShadingType, PageBreak } = window.docx;
+    const W = 9360;
+    // Tactical theme adapted for print readability
+    const PRIMARY = '0A0C12';  // near-black for headings
+    const ACCENT  = '00A0C8';  // cyan adapted for print
+    const NAVY    = '001F5C';  // deep navy
+    const GREY    = '2A2A2A';
+    const GREYMID = '6B6B6B';
+    const GREYLT  = 'DDDDDD';
+    const DATE    = new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'});
+    const NAME    = state.profile.name || 'Operative';
+    const ROLE    = [state.profile.role, state.profile.org].filter(Boolean).join(' · ');
+
+    const nb = { style: BorderStyle.NONE, size: 0, color: 'FFFFFF' };
+    const noBorders = { top:nb, bottom:nb, left:nb, right:nb };
+    const cb = { style: BorderStyle.SINGLE, size: 1, color: GREYLT };
+    const cellBorders = { top:cb, bottom:cb, left:cb, right:cb };
+
+    const p = (children, opts={}) => new Paragraph({ children, ...opts });
+    const t = (text, opts={}) => new TextRun({ text:text||'', font:'Arial', ...opts });
+
+    const children = [];
+
+    // Header block
+    children.push(p([t('I DO WHAT MUST BE DONE', { bold:true, size:28, color:NAVY })], { spacing:{after:60} }));
+    children.push(p([t('Mission Pathway', { size:22, color:GREYMID, italics:true })], { spacing:{after:40} }));
+    children.push(p([], { border:{bottom:{style:BorderStyle.SINGLE,size:12,color:NAVY,space:1}}, spacing:{after:240} }));
+
+    // Profile
+    children.push(p([t(NAME, { bold:true, size:32, color:NAVY })], { spacing:{after:60} }));
+    if (ROLE) children.push(p([t(ROLE, { size:20, color:GREYMID })], { spacing:{after:60} }));
+    children.push(p([t(DATE, { size:18, color:GREYMID })], { spacing:{after:400} }));
+
+    state.ambitions.forEach((a, ai) => {
+      children.push(p([t(`AMBITION ${String(ai+1).padStart(2,'0')}`, { size:16, color:ACCENT, bold:true })], { spacing:{before:200,after:80} }));
+      children.push(p([t(a.title||'Untitled Ambition', { bold:true, size:28, color:NAVY })], { spacing:{after:120} }));
+      if (a.context) children.push(p([t(a.context, { size:20, color:GREY })], { spacing:{after:140} }));
+
+      const grList = (a.guardrails||[]).filter(Boolean);
+      if (grList.length) {
+        children.push(p([t('Guardrails', { bold:true, size:18, color:NAVY })], { spacing:{before:80,after:60} }));
+        grList.forEach(g => children.push(p([t('\u26A1  '+g, { size:18, color:GREY })], { spacing:{after:40} })));
+      }
+
+      const intents = state.intentions.filter(i => i.ambitionId === a.id);
+      if (intents.length) {
+        children.push(p([], { border:{bottom:{style:BorderStyle.SINGLE,size:4,color:GREYLT,space:1}}, spacing:{before:160,after:160} }));
+        intents.forEach((intent, ii) => {
+          children.push(p([t(`INTENTION ${String(ii+1).padStart(2,'0')}`, { size:16, color:ACCENT, bold:true })], { spacing:{before:120,after:60} }));
+          children.push(p([t(intent.text||'\u2014', { size:22, color:GREY, italics:true })], { spacing:{after:120} }));
+
+          const acts = state.actions.filter(x => x.intentionId === intent.id);
+          if (acts.length) {
+            const mkHdr = (text, w) => new TableCell({ width:{size:w,type:WidthType.DXA}, shading:{fill:NAVY,type:ShadingType.CLEAR}, borders:noBorders, margins:{top:80,bottom:80,left:120,right:120},
+              children:[p([t(text,{bold:true,size:18,color:'FFFFFF'})])] });
+            const mkCell = (text, w, shade) => new TableCell({ width:{size:w,type:WidthType.DXA}, shading:{fill:shade,type:ShadingType.CLEAR}, borders:cellBorders, margins:{top:80,bottom:80,left:120,right:120},
+              children:[p([t(text||'\u2014',{size:18,color:GREY})])] });
+            const statusMap = { planned:'Planned', inprogress:'In Progress', complete:'Complete' };
+            children.push(new Table({
+              width:{size:W,type:WidthType.DXA}, columnWidths:[2800,2480,1360,1360,1360],
+              rows:[
+                new TableRow({ tableHeader:true, children:[ mkHdr('Action',2800), mkHdr('Outcome',2480), mkHdr('Start',1360), mkHdr('End',1360), mkHdr('Status',1360) ] }),
+                ...acts.map((act,idx) => {
+                  const s = idx%2===0?'F5F5F5':'FFFFFF';
+                  return new TableRow({ children:[ mkCell(act.title,2800,s), mkCell(act.outcome,2480,s), mkCell(act.startDate,1360,s), mkCell(act.endDate,1360,s), mkCell(statusMap[act.status]||act.status,1360,s) ] });
+                })
+              ]
+            }));
+            children.push(p([], { spacing:{after:120} }));
+          }
+        });
+      }
+      if (ai < state.ambitions.length - 1) {
+        children.push(p([new PageBreak()], { spacing:{after:0} }));
+      }
+    });
+
+    // Grogu Commentary
+    const commentary = state.groguCommentary||[];
+    if (commentary.length) {
+      children.push(p([new PageBreak()], { spacing:{after:0} }));
+      children.push(p([t('\uD83D\uDC38  Grogu Commentary', { bold:true, size:28, color:NAVY })], { spacing:{before:200,after:80} }));
+      children.push(p([], { border:{bottom:{style:BorderStyle.SINGLE,size:6,color:ACCENT,space:1}}, spacing:{after:200} }));
+      const stepLabels = { ambition:'Ambitions', intention:'Intentions', action:'Actions' };
+      commentary.forEach(entry => {
+        const date = new Date(entry.savedAt).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
+        children.push(p([t(`${stepLabels[entry.step]||entry.step}  \u00B7  ${date}`, { size:16, color:GREYMID, bold:true })], { spacing:{before:160,after:80} }));
+        entry.text.split('\n').forEach(line => {
+          children.push(p([t(line||' ', { size:20, color:GREY })], { spacing:{after:60}, indent:{left:360} }));
+        });
+        children.push(p([], { border:{bottom:{style:BorderStyle.SINGLE,size:2,color:GREYLT,space:1}}, spacing:{before:80,after:80} }));
+      });
+    }
+
+    const doc = new Document({
+      styles:{ default:{ document:{ run:{ font:'Arial', size:22 } } } },
+      sections:[{ properties:{ page:{ size:{width:12240,height:15840}, margin:{top:1440,right:1440,bottom:1440,left:1440} } }, children }]
+    });
+
+    Packer.toBlob(doc).then(blob => {
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `mission-pathway-${new Date().toISOString().slice(0,10)}.docx`;
+      a.click();
+      showToast('✅ Word document downloaded.');
+    }).catch(e => showToast('⚠ Word export failed: ' + e.message));
+  }
+
+  if (window.docx) { buildAndDownload(); return; }
+  const script = document.createElement('script');
+  script.src = 'https://unpkg.com/docx@9.6.1/dist/index.umd.cjs';
+  script.onload = buildAndDownload;
+  script.onerror = () => showToast('⚠ Could not load Word library. Check your internet connection.');
+  document.head.appendChild(script);
 }
 
 function exportPDF() {
