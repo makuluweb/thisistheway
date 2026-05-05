@@ -3,2308 +3,1606 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ambition — KPMG Coaching Protocol</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<title>Ambition Coach</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-/* ═══════════════════════════════════════════
-   KPMG DESIGN SYSTEM
-═══════════════════════════════════════════ */
-:root {
-  /* KPMG Brand Palette */
-  --kpmg-blue:       #00338D;
-  --kpmg-blue-mid:   #0047BB;
-  --kpmg-blue-light: #0091DA;
-  --kpmg-blue-pale:  #E8F0FB;
-  --kpmg-blue-ultra: #F0F5FF;
-  --kpmg-teal:       #005B5B;
-  --kpmg-teal-light: #00A3A1;
-  --kpmg-purple:     #470A68;
-  --kpmg-violet:     #6D2077;
-
-  /* Neutral System */
-  --white:      #FFFFFF;
-  --grey-50:    #FAFAFA;
-  --grey-100:   #F5F5F5;
-  --grey-200:   #EEEEEE;
-  --grey-300:   #E0E0E0;
-  --grey-400:   #BDBDBD;
-  --grey-500:   #9E9E9E;
-  --grey-600:   #757575;
-  --grey-700:   #616161;
-  --grey-800:   #424242;
-  --grey-900:   #212121;
-
-  /* Status Colours */
-  --status-planned:  #6B7FA3;
-  --status-progress: #B45309;
-  --status-complete: #166534;
-  --status-p-bg:     #EFF6FF;
-  --status-i-bg:     #FFFBEB;
-  --status-c-bg:     #F0FDF4;
-
-  /* Typography */
-  --font-display: 'DM Serif Display', Georgia, serif;
-  --font-body:    'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-
-  /* Spacing */
-  --radius-sm: 2px;
-  --radius:    4px;
-  --radius-lg: 8px;
-
-  /* Shadows */
-  --shadow-xs: 0 1px 2px rgba(0,51,141,0.06);
-  --shadow-sm: 0 2px 8px rgba(0,51,141,0.08);
-  --shadow-md: 0 4px 16px rgba(0,51,141,0.10);
-  --shadow-lg: 0 8px 32px rgba(0,51,141,0.12);
-}
-
-/* ─── RESET ─── */
-*{box-sizing:border-box;margin:0;padding:0;}
-html{scroll-behavior:smooth;}
-body{
-  font-family:var(--font-body);
-  background:var(--grey-100);
-  color:var(--grey-900);
-  min-height:100vh;
-  font-size:14px;
-  line-height:1.5;
-  -webkit-font-smoothing:antialiased;
-}
-
-/* ═══════════════════════════════════════════
-   AUTH SCREEN
-═══════════════════════════════════════════ */
-#auth-screen{
-  position:fixed;inset:0;
-  display:flex;
-  z-index:1000;
-  overflow:hidden;
-}
-
-.auth-left{
-  width:45%;
-  background:var(--kpmg-blue);
-  display:flex;flex-direction:column;
-  justify-content:space-between;
-  padding:48px 52px;
-  position:relative;
-  overflow:hidden;
-}
-
-.auth-left::before{
-  content:'';
-  position:absolute;
-  bottom:-120px;right:-120px;
-  width:400px;height:400px;
-  border-radius:50%;
-  background:rgba(0,145,218,0.18);
-}
-
-.auth-left::after{
-  content:'';
-  position:absolute;
-  top:-80px;left:-80px;
-  width:280px;height:280px;
-  border-radius:50%;
-  background:rgba(255,255,255,0.04);
-}
-
-.auth-brand{position:relative;z-index:1;}
-
-.auth-kpmg-wordmark{
-  font-family:var(--font-body);
-  font-weight:700;
-  font-size:2rem;
-  letter-spacing:0.12em;
-  color:var(--white);
-  margin-bottom:6px;
-}
-
-.auth-kpmg-tagline{
-  font-size:0.72rem;
-  color:rgba(255,255,255,0.55);
-  letter-spacing:0.06em;
-  text-transform:uppercase;
-}
-
-.auth-left-copy{
-  position:relative;z-index:1;
-}
-
-.auth-left-headline{
-  font-family:var(--font-display);
-  font-size:2.6rem;
-  color:var(--white);
-  line-height:1.15;
-  margin-bottom:16px;
-}
-
-.auth-left-sub{
-  font-size:0.88rem;
-  color:rgba(255,255,255,0.65);
-  line-height:1.65;
-  max-width:320px;
-}
-
-.auth-left-steps{
-  display:flex;flex-direction:column;gap:12px;
-  position:relative;z-index:1;
-}
-
-.auth-step-item{
-  display:flex;align-items:flex-start;gap:12px;
-}
-
-.auth-step-num{
-  width:24px;height:24px;
-  border:1.5px solid rgba(255,255,255,0.3);
-  border-radius:50%;
-  display:flex;align-items:center;justify-content:center;
-  font-size:0.7rem;
-  font-weight:600;
-  color:rgba(255,255,255,0.7);
-  flex-shrink:0;
-  margin-top:1px;
-}
-
-.auth-step-text{
-  font-size:0.82rem;
-  color:rgba(255,255,255,0.65);
-  line-height:1.4;
-}
-
-.auth-step-text strong{color:rgba(255,255,255,0.9);}
-
-.auth-right{
-  flex:1;
-  background:var(--white);
-  display:flex;align-items:center;justify-content:center;
-  padding:48px;
-}
-
-.auth-form-box{
-  width:min(380px,100%);
-}
-
-.auth-form-title{
-  font-family:var(--font-display);
-  font-size:1.8rem;
-  color:var(--kpmg-blue);
-  margin-bottom:6px;
-}
-
-.auth-form-sub{
-  font-size:0.82rem;
-  color:var(--grey-500);
-  margin-bottom:32px;
-}
-
-.auth-form-sub a{color:var(--kpmg-blue-light);text-decoration:none;}
-
-.form-field{margin-bottom:20px;}
-
-.form-label{
-  display:block;
-  font-size:0.72rem;
-  font-weight:600;
-  letter-spacing:0.06em;
-  text-transform:uppercase;
-  color:var(--grey-600);
-  margin-bottom:7px;
-}
-
-.form-input-wrap{position:relative;}
-
-.form-input{
-  width:100%;
-  padding:11px 40px 11px 14px;
-  border:1.5px solid var(--grey-300);
-  border-radius:var(--radius);
-  font-family:var(--font-body);
-  font-size:0.9rem;
-  color:var(--grey-900);
-  background:var(--white);
-  outline:none;
-  transition:border-color .18s,box-shadow .18s;
-}
-
-.form-input:focus{
-  border-color:var(--kpmg-blue);
-  box-shadow:0 0 0 3px rgba(0,51,141,0.08);
-}
-
-.form-input::placeholder{color:var(--grey-400);}
-
-.eye-btn{
-  position:absolute;right:12px;top:50%;transform:translateY(-50%);
-  background:none;border:none;cursor:pointer;
-  color:var(--grey-400);font-size:1rem;padding:2px;
-  transition:color .15s;
-}
-.eye-btn:hover{color:var(--kpmg-blue);}
-
-.form-hint{
-  font-size:0.72rem;
-  color:var(--grey-500);
-  margin-top:7px;
-  line-height:1.5;
-}
-
-.form-error{
-  font-size:0.72rem;
-  color:#DC2626;
-  margin-top:6px;
-  display:none;
-}
-.form-error.show{display:block;}
-
-.auth-submit{
-  width:100%;
-  padding:13px;
-  background:var(--kpmg-blue);
-  border:none;
-  border-radius:var(--radius);
-  color:var(--white);
-  font-family:var(--font-body);
-  font-size:0.88rem;
-  font-weight:600;
-  letter-spacing:0.03em;
-  cursor:pointer;
-  transition:background .18s,box-shadow .18s;
-  margin-top:24px;
-}
-
-.auth-submit:hover{
-  background:var(--kpmg-blue-mid);
-  box-shadow:var(--shadow-md);
-}
-
-.auth-security{
-  font-size:0.7rem;
-  color:var(--grey-400);
-  text-align:center;
-  margin-top:16px;
-  line-height:1.6;
-}
-
-@media(max-width:700px){
-  .auth-left{display:none;}
-  .auth-right{width:100%;padding:32px 24px;}
-}
-
-/* ═══════════════════════════════════════════
-   MAIN APP
-═══════════════════════════════════════════ */
-#main-app{display:none;min-height:100vh;}
-
-/* ─── TOPBAR ─── */
-#topbar{
-  position:sticky;top:0;z-index:100;
-  background:var(--kpmg-blue);
-  height:60px;
-  display:flex;align-items:center;
-  padding:0 28px;
-  gap:20px;
-  box-shadow:0 2px 8px rgba(0,51,141,0.25);
-}
-
-.top-brand{
-  display:flex;align-items:center;gap:16px;
-  padding-right:24px;
-  border-right:1px solid rgba(255,255,255,0.15);
-  flex-shrink:0;
-}
-
-.top-kpmg{
-  font-weight:700;
-  font-size:1.1rem;
-  letter-spacing:0.14em;
-  color:var(--white);
-}
-
-.top-app-name{
-  font-family:var(--font-display);
-  font-size:1.1rem;
-  color:rgba(255,255,255,0.85);
-  font-style:italic;
-}
-
-.top-nav{
-  display:flex;align-items:center;gap:2px;
-  flex:1;
-}
-
-.top-tab{
-  padding:8px 18px;
-  background:transparent;
-  border:none;
-  color:rgba(255,255,255,0.6);
-  font-family:var(--font-body);
-  font-size:0.8rem;
-  font-weight:500;
-  cursor:pointer;
-  border-radius:var(--radius);
-  transition:all .15s;
-  display:flex;align-items:center;gap:8px;
-  white-space:nowrap;
-}
-
-.top-tab:hover{
-  color:rgba(255,255,255,0.9);
-  background:rgba(255,255,255,0.08);
-}
-
-.top-tab.active{
-  color:var(--white);
-  background:rgba(255,255,255,0.15);
-  font-weight:600;
-}
-
-.top-tab .tab-step{
-  font-size:0.65rem;
-  opacity:.6;
-  font-weight:400;
-}
-
-.top-actions{
-  display:flex;align-items:center;gap:8px;
-  margin-left:auto;
-  flex-shrink:0;
-}
-
-.top-btn{
-  padding:7px 14px;
-  background:rgba(255,255,255,0.1);
-  border:1px solid rgba(255,255,255,0.2);
-  border-radius:var(--radius);
-  color:rgba(255,255,255,0.85);
-  font-family:var(--font-body);
-  font-size:0.75rem;
-  font-weight:500;
-  cursor:pointer;
-  transition:all .15s;
-}
-.top-btn:hover{background:rgba(255,255,255,0.2);color:var(--white);}
-
-/* PROFILE BUTTON */
-.profile-btn{
-  display:flex;align-items:center;gap:8px;
-  padding:5px 10px;
-  background:rgba(255,255,255,0.1);
-  border:1px solid rgba(255,255,255,0.2);
-  border-radius:20px;
-  cursor:pointer;
-  transition:all .15s;
-}
-.profile-btn:hover{background:rgba(255,255,255,0.18);}
-
-.profile-avatar{
-  width:28px;height:28px;
-  border-radius:50%;
-  background:var(--kpmg-blue-light);
-  border:1.5px solid rgba(255,255,255,0.4);
-  display:flex;align-items:center;justify-content:center;
-  font-size:0.72rem;font-weight:700;
-  color:var(--white);
-  overflow:hidden;flex-shrink:0;
-}
-.profile-avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%;}
-.profile-name-chip{font-size:0.75rem;font-weight:500;color:rgba(255,255,255,.85);}
-
-/* ─── KEY INDICATOR ─── */
-.key-chip{
-  display:flex;align-items:center;gap:5px;
-  font-size:0.7rem;
-  color:rgba(255,255,255,0.55);
-  padding-left:8px;
-}
-.key-dot{width:6px;height:6px;border-radius:50%;background:#22C55E;flex-shrink:0;}
-
-/* ═══════════════════════════════════════════
-   PROGRESS RIBBON
-═══════════════════════════════════════════ */
-#progress-ribbon{
-  background:var(--white);
-  border-bottom:1px solid var(--grey-200);
-  padding:0 28px;
-  display:flex;align-items:center;
-  height:52px;
-  gap:0;
-}
-
-.prog-step{
-  display:flex;align-items:center;gap:10px;
-  font-size:0.78rem;
-  font-weight:500;
-  color:var(--grey-400);
-  padding:0 16px;
-  height:100%;
-  border-bottom:2px solid transparent;
-  cursor:default;
-  transition:all .2s;
-  white-space:nowrap;
-}
-
-.prog-step.active{
-  color:var(--kpmg-blue);
-  border-bottom-color:var(--kpmg-blue);
-  font-weight:600;
-}
-
-.prog-step.done{
-  color:var(--kpmg-teal);
-}
-
-.prog-step-num{
-  width:22px;height:22px;
-  border-radius:50%;
-  border:1.5px solid currentColor;
-  display:flex;align-items:center;justify-content:center;
-  font-size:0.65rem;
-  font-weight:700;
-  flex-shrink:0;
-}
-
-.prog-step.done .prog-step-num{
-  background:var(--kpmg-teal);
-  border-color:var(--kpmg-teal);
-  color:var(--white);
-}
-
-.prog-step.active .prog-step-num{
-  background:var(--kpmg-blue);
-  border-color:var(--kpmg-blue);
-  color:var(--white);
-}
-
-.prog-chevron{
-  color:var(--grey-300);
-  font-size:0.7rem;
-  padding:0 4px;
-}
-
-/* ═══════════════════════════════════════════
-   WORKSPACE
-═══════════════════════════════════════════ */
-#workspace{
-  max-width:960px;
-  margin:0 auto;
-  padding:32px 24px 80px;
-}
-
-/* STEP PANELS */
-.step-panel{display:none;}
-.step-panel.active{display:block;animation:fadeUp .25s ease both;}
-@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-
-/* ─── SECTION HEADER ─── */
-.section-header{
-  margin-bottom:28px;
-  padding-bottom:20px;
-  border-bottom:1px solid var(--grey-200);
-}
-
-.section-eyebrow{
-  font-size:0.7rem;
-  font-weight:600;
-  letter-spacing:0.1em;
-  text-transform:uppercase;
-  color:var(--kpmg-blue-light);
-  margin-bottom:6px;
-}
-
-.section-title{
-  font-family:var(--font-display);
-  font-size:1.8rem;
-  color:var(--kpmg-blue);
-  line-height:1.15;
-  margin-bottom:6px;
-}
-
-.section-desc{
-  font-size:0.85rem;
-  color:var(--grey-600);
-  max-width:600px;
-  line-height:1.6;
-}
-
-/* ─── CARD ─── */
-.k-card{
-  background:var(--white);
-  border:1px solid var(--grey-200);
-  border-radius:var(--radius-lg);
-  box-shadow:var(--shadow-xs);
-  margin-bottom:16px;
-  overflow:hidden;
-  transition:box-shadow .2s,border-color .2s;
-  animation:fadeUp .2s ease both;
-}
-
-.k-card:hover{
-  box-shadow:var(--shadow-sm);
-  border-color:var(--grey-300);
-}
-
-.k-card-header{
-  display:flex;align-items:center;gap:12px;
-  padding:16px 20px;
-  background:var(--grey-50);
-  border-bottom:1px solid var(--grey-200);
-  cursor:pointer;
-  user-select:none;
-}
-
-.k-card-header h3{
-  font-size:0.95rem;
-  font-weight:600;
-  color:var(--grey-900);
-  flex:1;
-  line-height:1.3;
-}
-
-.k-card-body{padding:24px 24px 20px;}
-
-/* Coloured left border variants */
-.k-card.card-blue{border-left:4px solid var(--kpmg-blue);}
-.k-card.card-teal{border-left:4px solid var(--kpmg-teal-light);}
-.k-card.card-purple{border-left:4px solid var(--kpmg-violet);}
-
-/* ─── PILL BADGES ─── */
-.pill{
-  display:inline-flex;align-items:center;
-  font-size:0.68rem;
-  font-weight:600;
-  letter-spacing:0.04em;
-  padding:2px 10px;
-  border-radius:20px;
-  flex-shrink:0;
-}
-
-.pill-blue{background:var(--kpmg-blue-pale);color:var(--kpmg-blue);}
-.pill-teal{background:#E0F4F4;color:var(--kpmg-teal);}
-.pill-purple{background:#F3E8F7;color:var(--kpmg-violet);}
-.pill-grey{background:var(--grey-100);color:var(--grey-600);}
-
-/* ─── STATUS PILLS ─── */
-.status-pill{
-  display:inline-flex;align-items:center;gap:5px;
-  font-size:0.72rem;
-  font-weight:500;
-  padding:4px 12px;
-  border-radius:20px;
-  border:1.5px solid;
-  cursor:pointer;
-  transition:all .15s;
-}
-
-.sp-planned{
-  color:var(--status-planned);
-  border-color:var(--grey-300);
-  background:var(--white);
-}
-.sp-planned.active,
-.sp-planned:hover{
-  background:var(--status-p-bg);
-  border-color:var(--status-planned);
-  color:var(--kpmg-blue);
-}
-
-.sp-inprogress{
-  color:var(--grey-400);
-  border-color:var(--grey-300);
-  background:var(--white);
-}
-.sp-inprogress.active,
-.sp-inprogress:hover{
-  background:var(--status-i-bg);
-  border-color:var(--status-progress);
-  color:var(--status-progress);
-}
-
-.sp-complete{
-  color:var(--grey-400);
-  border-color:var(--grey-300);
-  background:var(--white);
-}
-.sp-complete.active,
-.sp-complete:hover{
-  background:var(--status-c-bg);
-  border-color:var(--status-complete);
-  color:var(--status-complete);
-}
-
-/* ─── FORM ELEMENTS ─── */
-.field-group{margin-bottom:16px;}
-
-.field-label{
-  display:block;
-  font-size:0.72rem;
-  font-weight:600;
-  letter-spacing:0.05em;
-  text-transform:uppercase;
-  color:var(--grey-500);
-  margin-bottom:6px;
-}
-
-.k-input,.k-textarea,.k-select{
-  width:100%;
-  padding:10px 14px;
-  border:1.5px solid var(--grey-200);
-  border-radius:var(--radius);
-  font-family:var(--font-body);
-  font-size:0.88rem;
-  color:var(--grey-900);
-  background:var(--white);
-  outline:none;
-  transition:border-color .18s,box-shadow .18s;
-}
-
-.k-input::placeholder,.k-textarea::placeholder{color:var(--grey-400);}
-
-.k-input:focus,.k-textarea:focus,.k-select:focus{
-  border-color:var(--kpmg-blue);
-  box-shadow:0 0 0 3px rgba(0,51,141,0.07);
-}
-
-.k-textarea{resize:vertical;min-height:80px;line-height:1.6;}
-.k-select{cursor:pointer;}
-
-.field-hint{
-  font-size:0.72rem;
-  color:var(--grey-400);
-  margin-top:5px;
-  line-height:1.4;
-}
-
-.field-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:14px;
-}
-@media(max-width:560px){.field-grid{grid-template-columns:1fr;}}
-
-/* ─── BUTTONS ─── */
-.btn-primary{
-  padding:10px 22px;
-  background:var(--kpmg-blue);
-  border:none;
-  border-radius:var(--radius);
-  color:var(--white);
-  font-family:var(--font-body);
-  font-size:0.82rem;
-  font-weight:600;
-  cursor:pointer;
-  transition:background .15s,box-shadow .15s;
-  display:inline-flex;align-items:center;gap:7px;
-}
-.btn-primary:hover{background:var(--kpmg-blue-mid);box-shadow:var(--shadow-sm);}
-
-.btn-secondary{
-  padding:10px 22px;
-  background:var(--white);
-  border:1.5px solid var(--grey-300);
-  border-radius:var(--radius);
-  color:var(--grey-700);
-  font-family:var(--font-body);
-  font-size:0.82rem;
-  font-weight:500;
-  cursor:pointer;
-  transition:all .15s;
-  display:inline-flex;align-items:center;gap:7px;
-}
-.btn-secondary:hover{border-color:var(--kpmg-blue);color:var(--kpmg-blue);background:var(--kpmg-blue-pale);}
-
-.btn-ghost{
-  padding:9px 18px;
-  background:transparent;
-  border:1.5px dashed var(--grey-300);
-  border-radius:var(--radius);
-  color:var(--grey-500);
-  font-family:var(--font-body);
-  font-size:0.8rem;
-  font-weight:500;
-  cursor:pointer;
-  transition:all .15s;
-  display:inline-flex;align-items:center;gap:6px;
-  width:100%;
-  justify-content:center;
-  margin-top:8px;
-}
-.btn-ghost:hover{border-color:var(--kpmg-blue);color:var(--kpmg-blue);background:var(--kpmg-blue-pale);}
-
-.btn-icon{
-  background:none;border:none;cursor:pointer;
-  color:var(--grey-400);
-  padding:5px;border-radius:var(--radius-sm);
-  font-size:1rem;line-height:1;
-  transition:all .15s;flex-shrink:0;
-}
-.btn-icon:hover{color:#DC2626;background:#FEF2F2;}
-
-.toggle-chevron{
-  background:none;border:none;cursor:pointer;
-  color:var(--grey-400);font-size:0.7rem;
-  padding:4px;border-radius:var(--radius-sm);
-  transition:transform .2s,color .15s;line-height:1;
-}
-.toggle-chevron.open{transform:rotate(90deg);}
-.toggle-chevron:hover{color:var(--grey-600);}
-
-/* ─── COLLAPSIBLE ─── */
-.collapsible{transition:all .2s ease;}
-.collapsible.closed{display:none;}
-
-/* ─── COUNT CHIP ─── */
-.count-chip{
-  font-size:0.68rem;
-  font-weight:600;
-  padding:1px 8px;
-  border-radius:20px;
-  background:var(--grey-100);
-  color:var(--grey-500);
-}
-
-/* ─── INNER CARDS ─── */
-.inner-card{
-  background:var(--grey-50);
-  border:1px solid var(--grey-200);
-  border-radius:var(--radius);
-  padding:18px 20px;
-  margin-bottom:10px;
-  position:relative;
-  animation:fadeUp .2s ease both;
-}
-
-.inner-card.intent-inner{
-  border-left:3px solid var(--kpmg-teal-light);
-  background:var(--white);
-}
-
-.inner-card.action-inner{
-  border-left:3px solid var(--kpmg-violet);
-  background:var(--white);
-}
-
-.inner-card-header{
-  display:flex;align-items:center;gap:8px;
-  margin-bottom:14px;
-  padding-bottom:10px;
-  border-bottom:1px solid var(--grey-100);
-}
-
-.inner-card-header .pill{font-size:.65rem;}
-
-/* ─── GUARDRAIL ROW ─── */
-.guardrail-row{
-  display:flex;align-items:center;gap:8px;
-  margin-bottom:8px;
-  animation:fadeUp .15s ease both;
-}
-
-/* ─── STATUS ROW ─── */
-.status-row{
-  display:flex;gap:6px;
-  flex-wrap:wrap;
-  margin-bottom:16px;
-}
-
-/* ─── AI ADVISOR CARD ─── */
-.ai-card{
-  background:linear-gradient(135deg,var(--kpmg-blue) 0%,var(--kpmg-blue-mid) 100%);
-  border-radius:var(--radius-lg);
-  padding:24px 28px;
-  margin:28px 0;
-  position:relative;
-  overflow:hidden;
-}
-
-.ai-card::before{
-  content:'';
-  position:absolute;
-  top:-60px;right:-60px;
-  width:200px;height:200px;
-  border-radius:50%;
-  background:rgba(0,145,218,0.2);
-}
-
-.ai-card::after{
-  content:'';
-  position:absolute;
-  bottom:-40px;left:40%;
-  width:160px;height:160px;
-  border-radius:50%;
-  background:rgba(255,255,255,0.04);
-}
-
-.ai-eyebrow{
-  font-size:0.68rem;
-  font-weight:600;
-  letter-spacing:0.12em;
-  text-transform:uppercase;
-  color:rgba(255,255,255,0.6);
-  margin-bottom:6px;
-  position:relative;z-index:1;
-}
-
-.ai-title{
-  font-family:var(--font-display);
-  font-size:1.2rem;
-  color:var(--white);
-  margin-bottom:8px;
-  position:relative;z-index:1;
-}
-
-.ai-subtitle{
-  font-size:0.82rem;
-  color:rgba(255,255,255,0.65);
-  line-height:1.55;
-  margin-bottom:18px;
-  position:relative;z-index:1;
-  max-width:500px;
-}
-
-.ai-chips{
-  display:flex;gap:8px;flex-wrap:wrap;
-  position:relative;z-index:1;
-}
-
-.ai-chip{
-  padding:7px 16px;
-  background:rgba(255,255,255,0.12);
-  border:1px solid rgba(255,255,255,0.25);
-  border-radius:20px;
-  color:rgba(255,255,255,0.9);
-  font-family:var(--font-body);
-  font-size:0.75rem;
-  font-weight:500;
-  cursor:pointer;
-  transition:all .15s;
-}
-.ai-chip:hover{background:rgba(255,255,255,0.22);border-color:rgba(255,255,255,0.5);}
-
-.ai-save-btn{
-  padding:7px 16px;
-  background:rgba(255,255,255,0.18);
-  border:1.5px solid rgba(255,255,255,0.4);
-  border-radius:var(--radius);
-  color:var(--white);
-  font-family:var(--font-body);
-  font-size:0.78rem;
-  font-weight:600;
-  cursor:pointer;
-  transition:all .15s;
-}
-.ai-save-btn:hover{background:rgba(255,255,255,0.32);border-color:var(--white);}
-
-.grogu-commentary-strip{
-  background:linear-gradient(135deg,rgba(0,51,141,0.06),rgba(0,71,187,0.04));
-  border:1px solid var(--kpmg-blue-pale);
-  border-left:3px solid var(--kpmg-blue-light);
-  border-radius:var(--radius);
-  padding:14px 16px;
-  margin-bottom:10px;
-  animation:fadeUp .2s ease both;
-}
-
-.grogu-commentary-head{
-  display:flex;align-items:center;gap:8px;
-  margin-bottom:8px;
-  font-size:0.68rem;
-  font-weight:600;
-  letter-spacing:.06em;
-  text-transform:uppercase;
-  color:var(--kpmg-blue-light);
-}
-
-.grogu-commentary-text{
-  font-size:0.83rem;
-  color:var(--grey-700);
-  line-height:1.65;
-  white-space:pre-wrap;
-}
-
-.ai-response-box{
-  background:rgba(0,0,0,0.2);
-  border:1px solid rgba(255,255,255,0.12);
-  border-radius:var(--radius);
-  padding:16px 18px;
-  font-size:0.88rem;
-  color:rgba(255,255,255,0.9);
-  line-height:1.7;
-  white-space:pre-wrap;
-  display:none;
-  margin-top:14px;
-  position:relative;z-index:1;
-}
-
-.ai-thinking{
-  display:flex;align-items:center;gap:8px;
-  color:rgba(255,255,255,0.7);
-  font-size:0.78rem;
-  font-style:italic;
-}
-
-.dot{
-  width:5px;height:5px;border-radius:50%;
-  background:rgba(255,255,255,0.7);
-  animation:dotPulse 1.2s infinite;
-}
-.dot:nth-child(2){animation-delay:.2s;}
-.dot:nth-child(3){animation-delay:.4s;}
-@keyframes dotPulse{0%,80%,100%{transform:scale(.6);opacity:.3}40%{transform:scale(1);opacity:1}}
-
-/* ─── STEP NAV ─── */
-.step-nav{
-  display:flex;justify-content:space-between;align-items:center;
-  margin-top:36px;padding-top:24px;
-  border-top:1px solid var(--grey-200);
-}
-
-/* ─── PATHWAY ─── */
-.pathway-header-card{
-  background:var(--kpmg-blue);
-  border-radius:var(--radius-lg);
-  padding:28px 32px;
-  margin-bottom:24px;
-  display:flex;align-items:center;gap:20px;
-}
-
-.pathway-header-card h2{
-  font-family:var(--font-display);
-  font-size:1.5rem;
-  color:var(--white);
-  flex:1;
-}
-
-.pathway-header-card .pill{
-  background:rgba(255,255,255,0.15);
-  color:rgba(255,255,255,0.9);
-  font-size:0.72rem;
-}
-
-.pathway-ambition-card{
-  background:var(--white);
-  border:1px solid var(--grey-200);
-  border-radius:var(--radius-lg);
-  overflow:hidden;
-  margin-bottom:20px;
-  box-shadow:var(--shadow-xs);
-}
-
-.pathway-amb-head{
-  background:linear-gradient(135deg,var(--kpmg-blue) 0%,var(--kpmg-blue-mid) 100%);
-  padding:20px 24px;
-}
-
-.pathway-amb-head .eyebrow{
-  font-size:0.65rem;
-  font-weight:600;
-  letter-spacing:.12em;
-  text-transform:uppercase;
-  color:rgba(255,255,255,0.55);
-  margin-bottom:6px;
-}
-
-.pathway-amb-head h3{
-  font-family:var(--font-display);
-  font-size:1.2rem;
-  color:var(--white);
-  margin-bottom:6px;
-}
-
-.pathway-amb-head p{
-  font-size:0.83rem;
-  color:rgba(255,255,255,0.65);
-  line-height:1.55;
-}
-
-.pathway-guardrails{
-  display:flex;flex-wrap:wrap;gap:6px;
-  padding:12px 24px;
-  background:rgba(0,51,141,0.04);
-  border-bottom:1px solid var(--grey-100);
-}
-
-.guardrail-tag{
-  font-size:0.7rem;
-  color:var(--kpmg-blue);
-  background:var(--kpmg-blue-pale);
-  border-radius:20px;
-  padding:3px 12px;
-}
-
-.pathway-body{padding:20px 24px;}
-
-.pathway-grid{
-  display:grid;grid-template-columns:1fr 1fr;gap:16px;
-}
-@media(max-width:580px){.pathway-grid{grid-template-columns:1fr;}}
-
-.pathway-col{
-  background:var(--grey-50);
-  border:1px solid var(--grey-200);
-  border-radius:var(--radius);
-  padding:16px;
-}
-
-.pathway-col-head{
-  font-size:0.68rem;
-  font-weight:700;
-  letter-spacing:.08em;
-  text-transform:uppercase;
-  color:var(--grey-500);
-  margin-bottom:12px;
-  padding-bottom:8px;
-  border-bottom:1px solid var(--grey-200);
-}
-
-.pathway-item{
-  display:flex;align-items:flex-start;gap:8px;
-  font-size:0.82rem;
-  color:var(--grey-800);
-  line-height:1.5;
-  margin-bottom:8px;
-}
-
-.pathway-item-arrow{
-  color:var(--kpmg-blue-light);
-  font-size:.75rem;
-  margin-top:2px;
-  flex-shrink:0;
-}
-
-.status-indicator{
-  width:8px;height:8px;
-  border-radius:50%;
-  flex-shrink:0;
-  margin-top:5px;
-}
-.si-planned{background:var(--grey-400);}
-.si-progress{background:#F59E0B;}
-.si-complete{background:#22C55E;}
-
-/* ─── MODAL ─── */
-.modal-overlay{
-  display:none;position:fixed;inset:0;
-  background:rgba(0,0,0,.5);
-  z-index:500;
-  align-items:center;justify-content:center;
-  backdrop-filter:blur(4px);
-}
-.modal-overlay.open{display:flex;}
-
-.modal-box{
-  background:var(--white);
-  border-radius:var(--radius-lg);
-  width:min(480px,94vw);
-  box-shadow:var(--shadow-lg);
-  overflow:hidden;
-  animation:fadeUp .2s ease both;
-}
-
-.modal-head{
-  background:var(--kpmg-blue);
-  padding:24px 28px;
-}
-
-.modal-head h2{
-  font-family:var(--font-display);
-  font-size:1.3rem;
-  color:var(--white);
-  margin-bottom:2px;
-}
-
-.modal-head p{
-  font-size:0.78rem;
-  color:rgba(255,255,255,0.6);
-}
-
-.modal-body{padding:28px;}
-
-.modal-actions{
-  display:flex;gap:10px;justify-content:flex-end;
-  padding:20px 28px;
-  border-top:1px solid var(--grey-100);
-  background:var(--grey-50);
-}
-
-.avatar-row{
-  display:flex;align-items:center;gap:16px;
-  margin-bottom:20px;
-  padding-bottom:20px;
-  border-bottom:1px solid var(--grey-100);
-}
-
-.avatar-lg{
-  width:60px;height:60px;
-  border-radius:50%;
-  background:var(--kpmg-blue-pale);
-  border:2px solid var(--kpmg-blue);
-  display:flex;align-items:center;justify-content:center;
-  font-family:var(--font-display);
-  font-size:1.4rem;
-  color:var(--kpmg-blue);
-  overflow:hidden;flex-shrink:0;
-}
-.avatar-lg img{width:100%;height:100%;object-fit:cover;border-radius:50%;}
+  :root {
+    --ink: #00338d;        /* KPMG Primary Blue */
+    --cream: #f4f6fb;      /* Light blue-white background */
+    --warm: #e8edf7;       /* Soft blue tint */
+    --accent: #0091da;     /* KPMG Secondary Blue / Cyan */
+    --gold: #7ec8e3;       /* Light blue highlight */
+    --moss: #00a3a1;       /* KPMG Teal */
+    --pale: #d0daea;       /* Pale blue-grey border */
+    --mid: #6b7fa3;        /* Mid blue-grey */
+    --light-ink: #1a3a6b;  /* Dark navy text */
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    color: var(--ink);
+    min-height: 100vh;
+  }
+
+  /* ── SUBTLE KPMG GRID TEXTURE ── */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: linear-gradient(rgba(0,51,141,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,51,141,0.03) 1px, transparent 1px);
+    background-size: 32px 32px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── LAYOUT ── */
+  #app { position: relative; z-index: 1; max-width: 900px; margin: 0 auto; padding: 0 20px 80px; }
+
+  /* ── HEADER ── */
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 32px 0 24px;
+    border-bottom: 3px solid var(--ink);
+    border-top: 5px solid var(--accent);
+    margin-bottom: 36px;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  .brand {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .brand-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    font-weight: 900;
+    letter-spacing: -0.02em;
+    line-height: 1;
+  }
+
+  .brand-sub {
+    font-size: 0.78rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--mid);
+    margin-top: 4px;
+  }
+
+  /* ── PROFILE ── */
+  #profile-section {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    cursor: pointer;
+  }
+
+  #avatar-circle {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: var(--pale);
+    border: 2px solid var(--ink);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    overflow: hidden;
+    position: relative;
+  }
+
+  #avatar-circle img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+
+  .profile-info { text-align: right; }
+  .profile-name { font-weight: 600; font-size: 0.95rem; }
+  .profile-hint { font-size: 0.72rem; color: var(--mid); }
+
+  /* ── PROFILE MODAL ── */
+  .modal-overlay {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(26,18,8,0.55);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .modal-overlay.open { display: flex; }
+
+  .modal {
+    background: var(--cream);
+    border: 2px solid var(--ink);
+    border-radius: 4px;
+    padding: 36px;
+    width: min(480px, 94vw);
+    box-shadow: 8px 8px 0 var(--ink);
+    animation: slideUp 0.2s ease;
+  }
+
+  @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+  .modal h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    margin-bottom: 24px;
+  }
+
+  .field { margin-bottom: 18px; }
+  .field label { display: block; font-size: 0.8rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--mid); margin-bottom: 6px; font-weight: 600; }
+
+  .field input, .field textarea, .field select {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1.5px solid var(--pale);
+    background: white;
+    border-radius: 3px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    color: var(--ink);
+    transition: border-color 0.2s;
+    outline: none;
+  }
+
+  .field input:focus, .field textarea:focus, .field select:focus {
+    border-color: var(--accent);
+  }
+
+  .field textarea { resize: vertical; min-height: 80px; }
+
+  .avatar-upload {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 18px;
+  }
+
+  .avatar-preview {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: var(--pale);
+    border: 2px solid var(--ink);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+
+  .avatar-preview img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+
+  .btn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 22px; border: 1.5px solid var(--ink); background: var(--ink); color: var(--cream); border-radius: 3px; font-family: 'DM Sans', sans-serif; font-size: 0.88rem; font-weight: 600; cursor: pointer; letter-spacing: 0.04em; transition: all 0.15s; }
+  .btn:hover { background: var(--accent); border-color: var(--accent); }
+  .btn.ghost { background: transparent; color: var(--ink); }
+  .btn.ghost:hover { background: var(--pale); border-color: var(--ink); color: var(--ink); }
+  .btn.accent-btn { background: var(--accent); border-color: var(--accent); }
+  .btn.moss-btn { background: var(--moss); border-color: var(--moss); }
+  .btn.small { padding: 6px 14px; font-size: 0.8rem; }
+
+  .modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 24px; }
+
+  /* ── STEP HEADER ── */
+  .step-header {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    margin-bottom: 6px;
+  }
+
+  .step-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 4rem;
+    font-weight: 900;
+    line-height: 1;
+    color: var(--pale);
+    flex-shrink: 0;
+    user-select: none;
+  }
+
+  .step-label-group { flex: 1; }
+  .step-label {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.6rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+
+  .step-desc {
+    font-size: 0.82rem;
+    color: var(--mid);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-top: 2px;
+  }
+
+  .section-divider {
+    height: 2px;
+    background: linear-gradient(to right, var(--ink), var(--accent), transparent);
+    margin-bottom: 28px;
+  }
+
+  /* ── AMBITIONS LIST ── */
+  #ambitions-list { margin-bottom: 20px; }
+
+  .ambition-row {
+    display: flex;
+    align-items: stretch;
+    gap: 12px;
+    margin-bottom: 12px;
+    animation: fadeIn 0.25s ease;
+  }
+
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+  .ambition-num-badge {
+    width: 32px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding-top: 12px;
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 1rem;
+    color: var(--mid);
+  }
+
+  .ambition-card {
+    flex: 1;
+    background: white;
+    border: 1.5px solid var(--pale);
+    border-radius: 4px;
+    overflow: hidden;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+
+  .ambition-card:focus-within {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(200,65,10,0.08);
+  }
+
+  .ambition-card.active-ambition {
+    border-color: var(--accent);
+    box-shadow: 3px 3px 0 var(--accent);
+  }
+
+  .ambition-card-inner { padding: 14px 16px; }
+
+  .ambition-top-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+
+  .ambition-title-input {
+    flex: 1;
+    border: none;
+    background: transparent;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--ink);
+    outline: none;
+  }
+
+  .ambition-title-input::placeholder { color: var(--pale); }
+
+  .ambition-body-input {
+    width: 100%;
+    border: none;
+    background: transparent;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.88rem;
+    color: var(--light-ink);
+    outline: none;
+    resize: none;
+    min-height: 44px;
+    line-height: 1.55;
+  }
+
+  .ambition-body-input::placeholder { color: #c9bfb2; }
+
+  .ambition-meta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 16px;
+    background: var(--warm);
+    border-top: 1px solid var(--pale);
+    font-size: 0.78rem;
+    color: var(--mid);
+  }
+
+  .guardrail-input {
+    flex: 1;
+    border: none;
+    background: transparent;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.78rem;
+    color: var(--mid);
+    outline: none;
+  }
+
+  .guardrail-input::placeholder { color: #c9bfb2; }
+
+  .del-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--mid);
+    padding: 6px;
+    border-radius: 3px;
+    font-size: 1rem;
+    line-height: 1;
+    transition: color 0.15s;
+  }
+
+  .del-btn:hover { color: var(--accent); }
+
+  .add-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 0;
+    cursor: pointer;
+    color: var(--mid);
+    font-size: 0.85rem;
+    font-weight: 500;
+    transition: color 0.15s;
+    background: none;
+    border: none;
+    width: 100%;
+    text-align: left;
+  }
+
+  .add-row:hover { color: var(--accent); }
+  .add-row .plus { font-size: 1.2rem; font-weight: 300; }
+
+  /* ── AI PROMPT CARD ── */
+  .ai-card {
+    background: linear-gradient(135deg, #00338d 0%, #001f5c 100%);
+    border-radius: 6px;
+    padding: 20px 22px;
+    margin: 18px 0;
+    color: var(--cream);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .ai-card::before {
+    content: '✦';
+    position: absolute;
+    right: 20px; top: 14px;
+    font-size: 1.2rem;
+    opacity: 0.3;
+  }
+
+  .ai-card-label {
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 10px;
+    font-weight: 600;
+  }
+
+  .ai-prompt-text {
+    font-size: 0.88rem;
+    line-height: 1.6;
+    color: #e8dfd0;
+    margin-bottom: 16px;
+  }
+
+  .ai-response-area {
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 4px;
+    padding: 14px;
+    min-height: 80px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    color: var(--cream);
+    line-height: 1.6;
+    white-space: pre-wrap;
+  }
+
+  .ai-loading {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    padding: 8px 0;
+    color: var(--gold);
+    font-size: 0.82rem;
+  }
+
+  .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--gold); animation: bounce 1.2s infinite; }
+  .dot:nth-child(2) { animation-delay: 0.2s; }
+  .dot:nth-child(3) { animation-delay: 0.4s; }
+
+  @keyframes bounce { 0%,80%,100% { transform: scale(0.7); opacity: 0.5; } 40% { transform: scale(1); opacity: 1; } }
+
+  .ai-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 14px; }
+  .ai-chip { padding: 6px 14px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 20px; font-size: 0.78rem; color: var(--cream); cursor: pointer; transition: all 0.15s; font-family: 'DM Sans', sans-serif; }
+  .ai-chip:hover { background: var(--accent); border-color: var(--accent); }
+
+  .ai-save-chip { padding: 6px 14px; background: rgba(255,255,255,0.18); border: 1.5px solid rgba(255,255,255,0.4); border-radius: 6px; font-size: 0.75rem; color: var(--cream); cursor: pointer; transition: all 0.15s; font-family: 'DM Sans', sans-serif; font-weight: 600; }
+  .ai-save-chip:hover { background: rgba(255,255,255,0.32); border-color: white; }
+
+  .ai-save-row { display: none; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+
+  .grogu-commentary {
+    background: var(--kpmg-blue-pale, #E8F0FB);
+    border: 1.5px solid var(--pale);
+    border-left: 3px solid var(--accent);
+    border-radius: 4px;
+    padding: 14px 16px;
+    margin-bottom: 10px;
+    animation: fadeIn 0.2s ease both;
+  }
+
+  .grogu-commentary-head {
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .grogu-commentary-text {
+    font-size: 0.85rem;
+    color: var(--light-ink);
+    line-height: 1.65;
+    white-space: pre-wrap;
+  }
+
+  /* ── SECTION CARD ── */
+  .section-card {
+    background: white;
+    border: 1.5px solid var(--pale);
+    border-radius: 6px;
+    overflow: hidden;
+    margin-bottom: 14px;
+    transition: box-shadow 0.2s;
+  }
+
+  .section-card:hover { box-shadow: 0 2px 12px rgba(26,18,8,0.07); }
+
+  .section-card-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 18px;
+    cursor: pointer;
+    background: var(--warm);
+    border-bottom: 1.5px solid var(--pale);
+    user-select: none;
+  }
+
+  .section-card-header h3 { font-family: 'Playfair Display', serif; font-size: 1rem; font-weight: 700; flex: 1; }
+  .section-card-header .toggle-icon { color: var(--mid); font-size: 0.9rem; transition: transform 0.2s; }
+  .section-card-header.open .toggle-icon { transform: rotate(90deg); }
+
+  .section-card-body { padding: 18px; display: none; }
+  .section-card-body.open { display: block; }
+
+  /* ── INTENTIONS & ACTIONS ── */
+  .linked-badge {
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    background: var(--pale);
+    color: var(--mid);
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-weight: 600;
+  }
+
+  .tag-accent { background: rgba(200,65,10,0.1); color: var(--accent); }
+  .tag-moss { background: rgba(61,90,62,0.1); color: var(--moss); }
+
+  .intent-row, .action-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 10px;
+    animation: fadeIn 0.25s ease;
+  }
+
+  .intent-input, .action-input {
+    flex: 1;
+    padding: 10px 14px;
+    border: 1.5px solid var(--pale);
+    background: var(--cream);
+    border-radius: 3px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.88rem;
+    color: var(--ink);
+    outline: none;
+    resize: none;
+    min-height: 44px;
+    line-height: 1.5;
+    transition: border-color 0.2s;
+  }
+
+  .intent-input:focus, .action-input:focus { border-color: var(--accent); }
+
+  /* ── PROGRESS STRIP ── */
+  .progress-strip {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 36px;
+    align-items: center;
+    padding: 14px 18px;
+    background: var(--warm);
+    border: 1.5px solid var(--pale);
+    border-radius: 6px;
+  }
+
+  .prog-step {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--mid);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .prog-step.done { color: var(--moss); }
+  .prog-step.active { color: var(--accent); }
+
+  .prog-dot {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 2px solid var(--pale);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 0.85rem;
+    background: white;
+    color: var(--mid);
+    flex-shrink: 0;
+  }
+
+  .prog-step.done .prog-dot { background: var(--moss); border-color: var(--moss); color: white; }
+  .prog-step.active .prog-dot { background: var(--accent); border-color: var(--accent); color: white; }
+
+  .prog-line { flex: 1; height: 2px; background: var(--pale); }
+  .prog-line.done { background: var(--moss); }
+
+  /* ── EXPORT TOOLBAR ── */
+  .toolbar {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    margin-bottom: 32px;
+  }
+
+  /* ── SUMMARY VIEW ── */
+  #summary-view { display: none; }
+  #summary-view.open { display: block; }
+
+  .summary-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 28px;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .summary-header h2 { font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 900; }
+
+  .summary-ambition-card {
+    background: linear-gradient(135deg, #00338d 0%, #0091da 100%);
+    color: #ffffff;
+    border-radius: 8px;
+    padding: 28px 32px;
+    margin-bottom: 16px;
+  }
+
+  .summary-ambition-card h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+
+  .summary-ambition-card p { font-size: 0.9rem; line-height: 1.65; color: #c8dcf5; }
+
+  .summary-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+
+  @media (max-width: 600px) { .summary-grid { grid-template-columns: 1fr; } }
+
+  .summary-col-card {
+    background: white;
+    border: 1.5px solid var(--pale);
+    border-radius: 6px;
+    padding: 20px;
+  }
+
+  .summary-col-card h4 {
+    font-size: 0.75rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--mid);
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+
+  .summary-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin-bottom: 8px;
+    font-size: 0.88rem;
+    line-height: 1.5;
+    color: var(--light-ink);
+  }
+
+  .summary-item::before { content: '—'; color: var(--pale); flex-shrink: 0; }
+
+  /* ── NAV BETWEEN STEPS ── */
+  .step-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 28px;
+    padding-top: 20px;
+    border-top: 1px solid var(--pale);
+  }
+
+  /* ── TABS ── */
+  .main-tabs {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 32px;
+    border-bottom: 2px solid var(--pale);
+    padding-bottom: 0;
+  }
+
+  .tab {
+    padding: 10px 20px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    cursor: pointer;
+    background: none;
+    border: none;
+    color: var(--mid);
+    border-bottom: 2px solid transparent;
+    margin-bottom: -2px;
+    transition: all 0.15s;
+  }
+
+  .tab:hover { color: var(--ink); }
+  .tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 640px) {
+    .brand-title { font-size: 1.5rem; }
+    .step-num { font-size: 2.8rem; }
+  }
 </style>
 </head>
 <body>
+<div id="app">
 
-<!-- ═══════════════════════════════════════════
-     AUTH SCREEN
-════════════════════════════════════════════ -->
-<div id="auth-screen">
-
-  <div class="auth-left">
-    <div class="auth-brand">
-      <div class="auth-kpmg-wordmark">KPMG</div>
-      <div class="auth-kpmg-tagline">Coaching & Leadership</div>
+  <!-- ── HEADER ── -->
+  <header>
+    <div class="brand">
+      <div class="brand-title">Ambition Coach</div>
+      <div class="brand-sub">Clarity · Intention · Action</div>
     </div>
-
-    <div class="auth-left-copy">
-      <div class="auth-left-headline">Ambition<br><em>Coaching Protocol</em></div>
-      <div class="auth-left-sub">A structured three-step framework to set bold ambitions, define intentional behaviours, and build accountable action plans.</div>
-    </div>
-
-    <div class="auth-left-steps">
-      <div class="auth-step-item">
-        <div class="auth-step-num">1</div>
-        <div class="auth-step-text"><strong>Set Ambitions</strong> — Define bold, challenging goals with clear context and guardrails.</div>
+    <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;">
+      <div class="toolbar" style="margin:0;">
+        <button class="btn ghost small" onclick="exportJSON()">⬇ Backup</button>
+        <button class="btn ghost small" onclick="document.getElementById('import-input').click()">⬆ Restore</button>
+        <input type="file" id="import-input" accept=".json" style="display:none" onchange="importJSON(event)">
+        <button class="btn accent-btn small" onclick="exportPDF()">⎙ Export</button>
       </div>
-      <div class="auth-step-item">
-        <div class="auth-step-num">2</div>
-        <div class="auth-step-text"><strong>Define Intentions</strong> — Articulate the mindsets and behaviours that will drive success.</div>
-      </div>
-      <div class="auth-step-item">
-        <div class="auth-step-num">3</div>
-        <div class="auth-step-text"><strong>Commit to Actions</strong> — Build a concrete, time-bound action plan with clear outcomes.</div>
-      </div>
-    </div>
-  </div>
-
-  <div class="auth-right">
-    <div class="auth-form-box">
-      <div class="auth-form-title">Sign In</div>
-      <div class="auth-form-sub">Enter your Anthropic API key to enable AI coaching assistance.<br><a href="https://console.anthropic.com/settings/keys" target="_blank">Get your key →</a></div>
-
-      <div class="form-field">
-        <label class="form-label">Anthropic API Key</label>
-        <div class="form-input-wrap">
-          <input class="form-input" id="api-key-input" type="password"
-            placeholder="sk-ant-api03-…" autocomplete="off"
-            oninput="validateKey(this.value)"
-            onkeydown="if(event.key==='Enter')authenticate()">
-          <button class="eye-btn" onclick="toggleKeyVis()">👁</button>
+      <div id="profile-section" onclick="openProfileModal()">
+        <div class="profile-info">
+          <div class="profile-name" id="profile-name-display">Your Name</div>
+          <div class="profile-hint">Edit profile →</div>
         </div>
-        <div class="form-error" id="key-error">Key must begin with sk-ant-</div>
-        <div class="form-hint">Your key is stored only in this browser and sent exclusively to Anthropic's API.</div>
-      </div>
-
-      <button class="auth-submit" onclick="authenticate()">
-        Access Ambition Coach
-      </button>
-
-      <div class="auth-security">🔒 Secure · No data is stored on any server</div>
-    </div>
-  </div>
-</div>
-
-<!-- ═══════════════════════════════════════════
-     MAIN APP
-════════════════════════════════════════════ -->
-<div id="main-app">
-
-  <!-- TOPBAR -->
-  <div id="topbar">
-    <div class="top-brand">
-      <div class="top-kpmg">KPMG</div>
-      <div class="top-app-name">Ambition</div>
-    </div>
-
-    <nav class="top-nav">
-      <button class="top-tab active" id="tab-1" onclick="goStep(1,this)">
-        <span class="tab-step">01</span> Ambitions
-      </button>
-      <button class="top-tab" id="tab-2" onclick="goStep(2,this)">
-        <span class="tab-step">02</span> Intentions
-      </button>
-      <button class="top-tab" id="tab-3" onclick="goStep(3,this)">
-        <span class="tab-step">03</span> Actions
-      </button>
-      <button class="top-tab" id="tab-4" onclick="goStep(4,this)">
-        Pathway View
-      </button>
-    </nav>
-
-    <div class="top-actions">
-      <div class="key-chip">
-        <div class="key-dot"></div>
-        API Active
-      </div>
-      <button class="top-btn" onclick="exportJSON()">↓ Backup</button>
-      <button class="top-btn" onclick="document.getElementById('import-file').click()">↑ Restore</button>
-      <input type="file" id="import-file" accept=".json" style="display:none" onchange="importJSON(event)">
-      <button class="top-btn" onclick="exportPDF()">⎙ Export</button>
-      <div class="profile-btn" onclick="openProfile()">
-        <div class="profile-avatar" id="avatar-top">?</div>
-        <span class="profile-name-chip" id="top-name">Profile</span>
+        <div id="avatar-circle" id="avatar-header">?</div>
       </div>
     </div>
+  </header>
+
+  <!-- ── MAIN TABS ── -->
+  <div class="main-tabs">
+    <button class="tab active" onclick="switchTab('build',this)">Build</button>
+    <button class="tab" onclick="switchTab('summary',this)">Pathway View</button>
   </div>
 
-  <!-- PROGRESS RIBBON -->
-  <div id="progress-ribbon">
-    <div class="prog-step active" id="prog-1">
-      <div class="prog-step-num" id="prog-num-1">1</div>
-      Ambitions
-    </div>
-    <div class="prog-chevron">›</div>
-    <div class="prog-step" id="prog-2">
-      <div class="prog-step-num" id="prog-num-2">2</div>
-      Intentions
-    </div>
-    <div class="prog-chevron">›</div>
-    <div class="prog-step" id="prog-3">
-      <div class="prog-step-num" id="prog-num-3">3</div>
-      Actions
-    </div>
-    <div class="prog-chevron">›</div>
-    <div class="prog-step" id="prog-4">
-      <div class="prog-step-num" id="prog-num-4">↗</div>
-      Pathway
-    </div>
-  </div>
+  <!-- ── BUILD TAB ── -->
+  <div id="tab-build" class="tab-content active">
 
-  <!-- WORKSPACE -->
-  <div id="workspace">
-
-    <!-- ═══════════ STEP 1 — AMBITIONS ═══════════ -->
-    <div class="step-panel active" id="step-panel-1">
-
-      <div class="section-header">
-        <div class="section-eyebrow">Step 01 of 03</div>
-        <div class="section-title">Set Your Ambitions</div>
-        <div class="section-desc">Define bold, challenging goals that demand significant uplift. Provide context that will shape and inform your ambition statement, then add the guardrails that must be respected.</div>
+    <!-- PROGRESS -->
+    <div class="progress-strip" id="progress-strip">
+      <div class="prog-step active" id="prog-1">
+        <div class="prog-dot">1</div>
+        <span>Ambitions</span>
       </div>
+      <div class="prog-line" id="prog-line-1"></div>
+      <div class="prog-step" id="prog-2">
+        <div class="prog-dot">2</div>
+        <span>Intentions</span>
+      </div>
+      <div class="prog-line" id="prog-line-2"></div>
+      <div class="prog-step" id="prog-3">
+        <div class="prog-dot">3</div>
+        <span>Actions</span>
+      </div>
+    </div>
+
+    <!-- ──── STEP 1: AMBITIONS ──── -->
+    <div id="step-1">
+      <div class="step-header">
+        <div class="step-num">01</div>
+        <div class="step-label-group">
+          <div class="step-label">Set Your Ambition</div>
+          <div class="step-desc">Bold goals that demand significant uplift</div>
+        </div>
+      </div>
+      <div class="section-divider"></div>
 
       <div id="ambitions-list"></div>
 
-      <button class="btn-ghost" onclick="addAmbition()">
-        + Add Ambition
+      <button class="add-row" onclick="addAmbition()">
+        <span class="plus">+</span> Add Ambition
       </button>
 
-      <!-- ASK GROGU -->
-      <div class="ai-card">
-        <div class="ai-eyebrow">🐸 Ask Grogu</div>
-        <div class="ai-title">Challenge Your Ambition</div>
-        <div class="ai-subtitle">Grogu will help you forge a powerful ambition statement, push you to think bigger, and surface critical guardrails.</div>
-        <div class="ai-response-box" id="ai-amb-resp"></div>
-        <div class="ai-response-actions" id="ai-amb-actions" style="display:none;margin-top:10px;position:relative;z-index:1;display:none;gap:8px;flex-wrap:wrap;">
-          <button class="ai-save-btn" onclick="saveGroguResponse('ambition','guardrail')">+ Save as Guardrail</button>
-          <button class="ai-save-btn" onclick="saveGroguResponse('ambition','commentary')">📎 Save as Commentary</button>
+      <!-- AI CARD -->
+      <div class="ai-card" style="margin-top:24px;">
+        <div class="ai-card-label">🐸 Ask Grogu — Challenge Your Ambition</div>
+        <div class="ai-prompt-text">Ready to stress-test your ambition? Grogu will push you to think bigger, surface blind spots, and ensure it's genuinely challenging.</div>
+        <div class="ai-response-area" id="ai-ambition-response" style="display:none;"></div>
+        <div class="ai-save-row" id="ai-ambition-save">
+          <button class="ai-save-chip" onclick="saveGrogu('ambition','guardrail')">+ Save as Guardrail</button>
+          <button class="ai-save-chip" onclick="saveGrogu('ambition','commentary')">📎 Save as Commentary</button>
         </div>
-        <div class="ai-chips" style="margin-top:14px;">
-          <button class="ai-chip" onclick="aiAdvise('ambition','forge')">Forge ambition statement</button>
-          <button class="ai-chip" onclick="aiAdvise('ambition','bolder')">Push me to think bigger</button>
-          <button class="ai-chip" onclick="aiAdvise('ambition','guardrails')">Suggest guardrails</button>
-          <button class="ai-chip" onclick="aiAdvise('ambition','challenge')">Challenge my thinking</button>
+        <div class="ai-actions" style="margin-top:14px;">
+          <div class="ai-chip" onclick="aiChallenge('ambition','stretch')">Make it bolder</div>
+          <div class="ai-chip" onclick="aiChallenge('ambition','guardrails')">Suggest guardrails</div>
+          <div class="ai-chip" onclick="aiChallenge('ambition','question')">Challenge my thinking</div>
+          <div class="ai-chip" onclick="aiChallenge('ambition','examples')">Inspiring examples</div>
         </div>
       </div>
 
       <div class="step-nav">
         <span></span>
-        <button class="btn-primary" onclick="goStep(2,document.getElementById('tab-2'))">Continue to Intentions →</button>
+        <button class="btn accent-btn" onclick="goStep(2)">Continue to Intentions →</button>
       </div>
     </div>
 
-    <!-- ═══════════ STEP 2 — INTENTIONS ═══════════ -->
-    <div class="step-panel" id="step-panel-2">
-
-      <div class="section-header">
-        <div class="section-eyebrow">Step 02 of 03</div>
-        <div class="section-title">Define Your Intentions</div>
-        <div class="section-desc">Articulate the mindsets, behaviours, and ways of working that will drive each ambition. Intentions are the bridge between aspiration and execution.</div>
+    <!-- ──── STEP 2: INTENTIONS ──── -->
+    <div id="step-2" style="display:none;">
+      <div class="step-header">
+        <div class="step-num">02</div>
+        <div class="step-label-group">
+          <div class="step-label">Define Your Intentions</div>
+          <div class="step-desc">Mindsets &amp; behaviours that will drive the ambition</div>
+        </div>
       </div>
+      <div class="section-divider"></div>
 
       <div id="intentions-container"></div>
 
-      <div class="ai-card">
-        <div class="ai-eyebrow">🐸 Ask Grogu</div>
-        <div class="ai-title">Sharpen Your Intentions</div>
-        <div class="ai-subtitle">Grogu will help you name the specific mindsets and behaviours that will make the decisive difference in achieving your ambitions.</div>
-        <div class="ai-response-box" id="ai-int-resp"></div>
-        <div class="ai-response-actions" id="ai-int-actions" style="display:none;margin-top:10px;position:relative;z-index:1;gap:8px;flex-wrap:wrap;">
-          <button class="ai-save-btn" onclick="saveGroguResponse('intention','intention')">+ Save as Intention</button>
-          <button class="ai-save-btn" onclick="saveGroguResponse('intention','commentary')">📎 Save as Commentary</button>
+      <!-- AI CARD -->
+      <div class="ai-card" style="margin-top:8px;">
+        <div class="ai-card-label">🐸 Ask Grogu — Deepen Your Intentions</div>
+        <div class="ai-prompt-text">Intentions are the bridge between dream and reality — Grogu will help you name the specific mindsets and behaviours that will make the difference.</div>
+        <div class="ai-response-area" id="ai-intention-response" style="display:none;"></div>
+        <div class="ai-save-row" id="ai-intention-save">
+          <button class="ai-save-chip" onclick="saveGrogu('intention','intention')">+ Save as Intention</button>
+          <button class="ai-save-chip" onclick="saveGrogu('intention','commentary')">📎 Save as Commentary</button>
         </div>
-        <div class="ai-chips" style="margin-top:14px;">
-          <button class="ai-chip" onclick="aiAdvise('intention','behaviours')">Suggest key behaviours</button>
-          <button class="ai-chip" onclick="aiAdvise('intention','mindset')">Identify mindset shifts</button>
-          <button class="ai-chip" onclick="aiAdvise('intention','obstacles')">Surface likely obstacles</button>
-          <button class="ai-chip" onclick="aiAdvise('intention','reframe')">Reframe for impact</button>
+        <div class="ai-actions" style="margin-top:14px;">
+          <div class="ai-chip" onclick="aiChallenge('intention','behaviours')">Suggest key behaviours</div>
+          <div class="ai-chip" onclick="aiChallenge('intention','mindset')">Mindset shifts needed</div>
+          <div class="ai-chip" onclick="aiChallenge('intention','obstacles')">Likely obstacles</div>
+          <div class="ai-chip" onclick="aiChallenge('intention','reframe')">Reframe for impact</div>
         </div>
       </div>
 
       <div class="step-nav">
-        <button class="btn-secondary" onclick="goStep(1,document.getElementById('tab-1'))">← Back to Ambitions</button>
-        <button class="btn-primary" onclick="goStep(3,document.getElementById('tab-3'))">Continue to Actions →</button>
+        <button class="btn ghost" onclick="goStep(1)">← Back</button>
+        <button class="btn accent-btn" onclick="goStep(3)">Continue to Actions →</button>
       </div>
     </div>
 
-    <!-- ═══════════ STEP 3 — ACTIONS ═══════════ -->
-    <div class="step-panel" id="step-panel-3">
-
-      <div class="section-header">
-        <div class="section-eyebrow">Step 03 of 03</div>
-        <div class="section-title">Commit to Actions</div>
-        <div class="section-desc">Define specific, time-bound actions linked to each intention. Each action should have a clear description, expected outcome, timeline, and status.</div>
+    <!-- ──── STEP 3: ACTIONS ──── -->
+    <div id="step-3" style="display:none;">
+      <div class="step-header">
+        <div class="step-num">03</div>
+        <div class="step-label-group">
+          <div class="step-label">Plan Your Actions</div>
+          <div class="step-desc">Concrete steps that turn intention into delivery</div>
+        </div>
       </div>
+      <div class="section-divider"></div>
 
       <div id="actions-container"></div>
 
-      <div class="ai-card">
-        <div class="ai-eyebrow">🐸 Ask Grogu</div>
-        <div class="ai-title">Strengthen Your Action Plan</div>
-        <div class="ai-subtitle">Grogu will help you sharpen your actions, identify sequencing opportunities, and surface any critical gaps in your plan.</div>
-        <div class="ai-response-box" id="ai-act-resp"></div>
-        <div class="ai-response-actions" id="ai-act-actions" style="display:none;margin-top:10px;position:relative;z-index:1;gap:8px;flex-wrap:wrap;">
-          <button class="ai-save-btn" onclick="saveGroguResponse('action','action')">+ Save as Action</button>
-          <button class="ai-save-btn" onclick="saveGroguResponse('action','commentary')">📎 Save as Commentary</button>
+      <!-- AI CARD -->
+      <div class="ai-card" style="margin-top:8px;">
+        <div class="ai-card-label">🐸 Ask Grogu — Sharpen Your Actions</div>
+        <div class="ai-prompt-text">Actions are where ambition becomes real. Grogu will help you make them specific, sequenced, and genuinely impactful.</div>
+        <div class="ai-response-area" id="ai-action-response" style="display:none;"></div>
+        <div class="ai-save-row" id="ai-action-save">
+          <button class="ai-save-chip" onclick="saveGrogu('action','action')">+ Save as Action</button>
+          <button class="ai-save-chip" onclick="saveGrogu('action','commentary')">📎 Save as Commentary</button>
         </div>
-        <div class="ai-chips" style="margin-top:14px;">
-          <button class="ai-chip" onclick="aiAdvise('action','specific')">Make actions more specific</button>
-          <button class="ai-chip" onclick="aiAdvise('action','sequence')">Suggest sequencing</button>
-          <button class="ai-chip" onclick="aiAdvise('action','missing')">Identify gaps</button>
-          <button class="ai-chip" onclick="aiAdvise('action','quickwins')">Surface quick wins</button>
+        <div class="ai-actions" style="margin-top:14px;">
+          <div class="ai-chip" onclick="aiChallenge('action','specific')">Make more specific</div>
+          <div class="ai-chip" onclick="aiChallenge('action','sequence')">Suggest a sequence</div>
+          <div class="ai-chip" onclick="aiChallenge('action','missing')">What am I missing?</div>
+          <div class="ai-chip" onclick="aiChallenge('action','quick-wins')">Identify quick wins</div>
         </div>
       </div>
 
       <div class="step-nav">
-        <button class="btn-secondary" onclick="goStep(2,document.getElementById('tab-2'))">← Back to Intentions</button>
-        <button class="btn-primary" onclick="goStep(4,document.getElementById('tab-4'))">View Pathway →</button>
+        <button class="btn ghost" onclick="goStep(2)">← Back</button>
+        <button class="btn moss-btn" onclick="viewSummary()">View Pathway ✦</button>
       </div>
     </div>
 
-    <!-- ═══════════ STEP 4 — PATHWAY ═══════════ -->
-    <div class="step-panel" id="step-panel-4">
+  </div><!-- /tab-build -->
 
-      <div class="section-header" style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:16px;border-bottom:none;margin-bottom:8px;">
-        <div>
-          <div class="section-eyebrow">Strategic Summary</div>
-          <div class="section-title" style="margin-bottom:0;">Ambition Pathway</div>
-        </div>
-        <button class="btn-primary" onclick="exportPDF()">⎙ Export to PDF</button>
-      </div>
-      <div style="height:1px;background:var(--grey-200);margin-bottom:28px;"></div>
-
-      <div id="pathway-content"></div>
-
-      <div class="step-nav">
-        <button class="btn-secondary" onclick="goStep(3,document.getElementById('tab-3'))">← Back to Actions</button>
-      </div>
+  <!-- ── SUMMARY TAB ── -->
+  <div id="tab-summary" class="tab-content">
+    <div class="summary-header">
+      <h2>Your Ambition Pathway</h2>
+      <button class="btn accent-btn small" onclick="exportPDF()">⎙ Export PDF</button>
     </div>
+    <div id="summary-content"></div>
+  </div>
 
-  </div><!-- /workspace -->
-</div><!-- /main-app -->
+</div><!-- /app -->
 
-<!-- ═══════════════════════════════════════════
-     PROFILE MODAL
-════════════════════════════════════════════ -->
+<!-- ── PROFILE MODAL ── -->
 <div class="modal-overlay" id="profile-modal">
-  <div class="modal-box">
-    <div class="modal-head">
-      <h2>Your Profile</h2>
-      <p>Personalise your coaching experience</p>
+  <div class="modal">
+    <h2>Your Profile</h2>
+    <div class="avatar-upload">
+      <div class="avatar-preview" id="avatar-preview-modal">?</div>
+      <div>
+        <button class="btn ghost small" onclick="document.getElementById('avatar-file').click()">Upload Photo</button>
+        <input type="file" id="avatar-file" accept="image/*" style="display:none" onchange="handleAvatarUpload(event)">
+        <div style="font-size:0.75rem;color:var(--mid);margin-top:6px;">JPG, PNG · appears in your profile</div>
+      </div>
     </div>
-    <div class="modal-body">
-      <div class="avatar-row">
-        <div class="avatar-lg" id="avatar-modal">?</div>
-        <div>
-          <button class="btn-secondary" style="padding:7px 16px;font-size:.78rem;" onclick="document.getElementById('avatar-file').click()">Upload Photo</button>
-          <input type="file" id="avatar-file" accept="image/*" style="display:none" onchange="handleAvatar(event)">
-          <div class="field-hint" style="margin-top:6px;">JPG or PNG · appears on your profile</div>
-        </div>
-      </div>
-      <div class="field-group">
-        <label class="field-label">Full Name</label>
-        <input class="k-input" id="p-name" placeholder="Your full name">
-      </div>
-      <div class="field-grid">
-        <div class="field-group">
-          <label class="field-label">Role / Title</label>
-          <input class="k-input" id="p-role" placeholder="e.g. Sales Director">
-        </div>
-        <div class="field-group">
-          <label class="field-label">Team / Business Unit</label>
-          <input class="k-input" id="p-org" placeholder="e.g. EMEA Growth">
-        </div>
-      </div>
+    <div class="field">
+      <label>Name</label>
+      <input type="text" id="profile-name-input" placeholder="Your full name">
+    </div>
+    <div class="field">
+      <label>Role / Title</label>
+      <input type="text" id="profile-role-input" placeholder="e.g. Sales Director">
+    </div>
+    <div class="field">
+      <label>Team / Organisation</label>
+      <input type="text" id="profile-org-input" placeholder="e.g. EMEA Growth Team">
     </div>
     <div class="modal-actions">
-      <button class="btn-secondary" onclick="closeProfile()">Cancel</button>
-      <button class="btn-primary" onclick="saveProfile()">Save Profile</button>
+      <button class="btn ghost" onclick="closeProfileModal()">Cancel</button>
+      <button class="btn" onclick="saveProfile()">Save Profile</button>
     </div>
   </div>
 </div>
 
 <script>
-/* ═══════════════════════════════════════════
-   STATE
-═══════════════════════════════════════════ */
-let API_KEY = '';
-let currentStep = 1;
-
+// ────────────────────────────────────────────────
+// STATE
+// ────────────────────────────────────────────────
 let state = {
-  profile: { name:'', role:'', org:'', avatar:'' },
+  profile: { name: '', role: '', org: '', avatar: '' },
   ambitions: [],
   intentions: [],
   actions: [],
-  groguCommentary: []   // { id, step, text, savedAt }
+  groguCommentary: []
 };
 
-/* ═══════════════════════════════════════════
-   INIT
-═══════════════════════════════════════════ */
+let currentStep = 1;
+
+// ────────────────────────────────────────────────
+// INIT
+// ────────────────────────────────────────────────
 function init() {
-  const saved = localStorage.getItem('ambition-kpmg-v1');
-  if (saved) try { state = JSON.parse(saved); } catch(e) {}
-  const savedKey = localStorage.getItem('ambition-kpmg-key');
-  if (savedKey) { API_KEY = savedKey; launchApp(); }
-}
-
-function save() {
-  localStorage.setItem('ambition-kpmg-v1', JSON.stringify(state));
-}
-
-/* ═══════════════════════════════════════════
-   AUTH
-═══════════════════════════════════════════ */
-function validateKey(v) {
-  document.getElementById('key-error').classList.toggle('show', v && !v.startsWith('sk-ant-'));
-}
-
-function toggleKeyVis() {
-  const i = document.getElementById('api-key-input');
-  i.type = i.type === 'password' ? 'text' : 'password';
-}
-
-function authenticate() {
-  const key = document.getElementById('api-key-input').value.trim();
-  if (!key || !key.startsWith('sk-ant-')) {
-    document.getElementById('key-error').classList.add('show');
-    return;
+  const saved = localStorage.getItem('ambition-coach-v1');
+  if (saved) {
+    try { state = JSON.parse(saved); } catch(e) {}
   }
-  API_KEY = key;
-  localStorage.setItem('ambition-kpmg-key', key);
-  launchApp();
-}
-
-function launchApp() {
-  document.getElementById('auth-screen').style.display = 'none';
-  document.getElementById('main-app').style.display = 'block';
+  if (!state.groguCommentary) state.groguCommentary = [];
   renderProfile();
   renderAmbitions();
-  if (!state.ambitions.length) addAmbition();
+  renderIntentions();
+  renderActions();
   updateProgress();
 }
 
-/* ═══════════════════════════════════════════
-   PROFILE
-═══════════════════════════════════════════ */
-function openProfile() {
-  document.getElementById('p-name').value = state.profile.name;
-  document.getElementById('p-role').value = state.profile.role;
-  document.getElementById('p-org').value = state.profile.org;
-  refreshAvatarEl('avatar-modal');
+function save() {
+  localStorage.setItem('ambition-coach-v1', JSON.stringify(state));
+}
+
+// ────────────────────────────────────────────────
+// PROFILE
+// ────────────────────────────────────────────────
+function openProfileModal() {
+  document.getElementById('profile-name-input').value = state.profile.name;
+  document.getElementById('profile-role-input').value = state.profile.role;
+  document.getElementById('profile-org-input').value = state.profile.org;
+  updateAvatarPreview();
   document.getElementById('profile-modal').classList.add('open');
 }
 
-function closeProfile() {
+function closeProfileModal() {
   document.getElementById('profile-modal').classList.remove('open');
 }
 
-function handleAvatar(e) {
-  const f = e.target.files[0]; if (!f) return;
-  const r = new FileReader();
-  r.onload = ev => { state.profile.avatar = ev.target.result; refreshAvatarEl('avatar-modal'); };
-  r.readAsDataURL(f);
+function handleAvatarUpload(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    state.profile.avatar = ev.target.result;
+    updateAvatarPreview();
+  };
+  reader.readAsDataURL(file);
 }
 
-function refreshAvatarEl(id) {
-  const el = document.getElementById(id); if (!el) return;
-  el.innerHTML = state.profile.avatar
-    ? `<img src="${state.profile.avatar}" alt="">`
-    : (state.profile.name || '?').charAt(0).toUpperCase();
-}
-
-function saveProfile() {
-  state.profile.name = document.getElementById('p-name').value.trim() || 'User';
-  state.profile.role = document.getElementById('p-role').value.trim();
-  state.profile.org = document.getElementById('p-org').value.trim();
-  save();
-  renderProfile();
-  closeProfile();
-}
-
-function renderProfile() {
-  document.getElementById('top-name').textContent = state.profile.name || 'Profile';
-  refreshAvatarEl('avatar-top');
-}
-
-/* ═══════════════════════════════════════════
-   AMBITIONS
-═══════════════════════════════════════════ */
-function addAmbition() {
-  const id = 'a' + Date.now();
-  state.ambitions.push({ id, title:'', context:'', guardrails:[] });
-  save(); renderAmbitions();
-  setTimeout(() => { const el = document.getElementById('atitle-'+id); if(el) el.focus(); }, 60);
-}
-
-function removeAmbition(id) {
-  if (!confirm('Remove this ambition and all linked data?')) return;
-  state.ambitions = state.ambitions.filter(a => a.id !== id);
-  state.intentions = state.intentions.filter(i => i.ambitionId !== id);
-  state.actions = state.actions.filter(a => a.ambitionId !== id);
-  save(); renderAmbitions();
-}
-
-function updateAmb(id, field, val) {
-  const a = state.ambitions.find(x => x.id === id);
-  if (a) { a[field] = val; save(); }
-  if (field === 'title') {
-    const h = document.getElementById('ahead-'+id);
-    if (h) h.textContent = val || 'New Ambition';
+function updateAvatarPreview() {
+  const preview = document.getElementById('avatar-preview-modal');
+  if (state.profile.avatar) {
+    preview.innerHTML = `<img src="${state.profile.avatar}" alt="">`;
+  } else {
+    const initials = state.profile.name ? state.profile.name.charAt(0).toUpperCase() : '?';
+    preview.innerHTML = initials;
   }
 }
 
-function addGuardrail(aid) {
-  const a = state.ambitions.find(x => x.id === aid);
-  if (a) { a.guardrails.push(''); save(); renderAmbitions(); }
+function saveProfile() {
+  state.profile.name = document.getElementById('profile-name-input').value.trim() || 'Your Name';
+  state.profile.role = document.getElementById('profile-role-input').value.trim();
+  state.profile.org = document.getElementById('profile-org-input').value.trim();
+  save();
+  renderProfile();
+  closeProfileModal();
+}
+
+function renderProfile() {
+  const nameEl = document.getElementById('profile-name-display');
+  const avatarEl = document.getElementById('avatar-circle');
+  nameEl.textContent = state.profile.name || 'Your Name';
+  if (state.profile.avatar) {
+    avatarEl.innerHTML = `<img src="${state.profile.avatar}" alt="">`;
+  } else {
+    avatarEl.textContent = (state.profile.name || '?').charAt(0).toUpperCase();
+  }
+}
+
+// ────────────────────────────────────────────────
+// AMBITIONS
+// ────────────────────────────────────────────────
+function addAmbition() {
+  const id = Date.now().toString();
+  state.ambitions.push({ id, title: '', body: '', guardrail: '' });
+  save();
+  renderAmbitions();
   setTimeout(() => {
-    const inputs = document.querySelectorAll(`.gr-${aid}`);
-    if (inputs.length) inputs[inputs.length-1].focus();
-  }, 60);
+    const inputs = document.querySelectorAll('.ambition-title-input');
+    if (inputs.length) inputs[inputs.length - 1].focus();
+  }, 50);
 }
 
-function updateGuardrail(aid, idx, val) {
-  const a = state.ambitions.find(x => x.id === aid);
-  if (a) { a.guardrails[idx] = val; save(); }
+function removeAmbition(id) {
+  state.ambitions = state.ambitions.filter(a => a.id !== id);
+  state.intentions = state.intentions.filter(i => i.ambitionId !== id);
+  state.actions = state.actions.filter(a => a.ambitionId !== id);
+  save();
+  renderAmbitions();
+  renderIntentions();
+  renderActions();
 }
 
-function removeGuardrail(aid, idx) {
-  const a = state.ambitions.find(x => x.id === aid);
-  if (a) { a.guardrails.splice(idx, 1); save(); renderAmbitions(); }
+function updateAmbitionField(id, field, val) {
+  const a = state.ambitions.find(x => x.id === id);
+  if (a) { a[field] = val; save(); }
+  if (field === 'title') renderIntentionHeaders();
 }
 
 function renderAmbitions() {
-  const el = document.getElementById('ambitions-list');
-  el.innerHTML = '';
+  const list = document.getElementById('ambitions-list');
+  list.innerHTML = '';
   state.ambitions.forEach((a, i) => {
-    const grHtml = a.guardrails.map((g, gi) => `
-      <div class="guardrail-row">
-        <input class="k-input gr-${a.id}" style="flex:1;" placeholder="e.g. Must not increase team headcount beyond current capacity…"
-          value="${esc(g)}" oninput="updateGuardrail('${a.id}',${gi},this.value)">
-        <button class="btn-icon" onclick="removeGuardrail('${a.id}',${gi})" title="Remove">✕</button>
-      </div>`).join('');
-
-    const card = document.createElement('div');
-    card.className = 'k-card card-blue';
-    card.innerHTML = `
-      <div class="k-card-header" onclick="toggleCard(this)">
-        <span class="pill pill-blue">Ambition ${String(i+1).padStart(2,'0')}</span>
-        <h3 id="ahead-${a.id}">${esc(a.title) || 'New Ambition'}</h3>
-        <span class="count-chip">${state.intentions.filter(x=>x.ambitionId===a.id).length} intentions</span>
-        <button class="toggle-chevron open" onclick="event.stopPropagation();toggleCard(this.closest('.k-card-header'))">▶</button>
-        <button class="btn-icon" onclick="event.stopPropagation();removeAmbition('${a.id}')" title="Remove ambition">✕</button>
-      </div>
-      <div class="k-card-body collapsible">
-        <div class="field-group">
-          <label class="field-label">Context — What is driving this ambition?</label>
-          <textarea class="k-textarea" placeholder="Describe the opportunity, challenge, or strategic imperative behind this ambition. What would extraordinary success look like? Why does this matter now?"
-            oninput="updateAmb('${a.id}','context',this.value)">${esc(a.context)}</textarea>
-          <div class="field-hint">This context will inform your ambition statement and AI advisor suggestions.</div>
+    const div = document.createElement('div');
+    div.className = 'ambition-row';
+    div.innerHTML = `
+      <div class="ambition-num-badge">${i + 1}</div>
+      <div class="ambition-card" id="acard-${a.id}">
+        <div class="ambition-card-inner">
+          <div class="ambition-top-row">
+            <input class="ambition-title-input" placeholder="Name this ambition…" value="${esc(a.title)}"
+              oninput="updateAmbitionField('${a.id}','title',this.value)" />
+            <button class="del-btn" onclick="removeAmbition('${a.id}')" title="Remove">✕</button>
+          </div>
+          <textarea class="ambition-body-input" placeholder="Describe what extraordinary success looks like. Be bold — what would 10× look like?"
+            oninput="updateAmbitionField('${a.id}','body',this.value)">${esc(a.body)}</textarea>
         </div>
-        <div class="field-group">
-          <label class="field-label">Ambition Statement</label>
-          <input class="k-input" id="atitle-${a.id}" placeholder="One bold, clear declaration of what must be achieved…"
-            value="${esc(a.title)}" oninput="updateAmb('${a.id}','title',this.value)">
-          <div class="field-hint">Be specific and challenging. A strong ambition demands a meaningful uplift.</div>
-        </div>
-        <div class="field-group">
-          <label class="field-label" style="color:var(--kpmg-blue);">Guardrails</label>
-          <div style="margin-bottom:8px;font-size:0.78rem;color:var(--grey-500);">Constraints and boundaries that must be respected in pursuing this ambition.</div>
-          <div id="gr-list-${a.id}">${grHtml}</div>
-          <button class="btn-ghost" style="margin-top:4px;width:auto;display:inline-flex;" onclick="addGuardrail('${a.id}')">
-            + Add Guardrail
-          </button>
+        <div class="ambition-meta">
+          <span style="flex-shrink:0;font-weight:600;">Guardrail:</span>
+          <input class="guardrail-input" placeholder="What constraint or boundary must we respect?"
+            value="${esc(a.guardrail)}" oninput="updateAmbitionField('${a.id}','guardrail',this.value)">
         </div>
       </div>`;
-    el.appendChild(card);
-    autoResize(card);
+    list.appendChild(div);
   });
 }
 
-/* ═══════════════════════════════════════════
-   INTENTIONS
-═══════════════════════════════════════════ */
-function addIntention(aid) {
-  const id = 'i' + Date.now();
-  state.intentions.push({ id, ambitionId:aid, text:'' });
-  save(); renderIntentions(); renderAmbitions();
-  setTimeout(() => { const el = document.getElementById('int-'+id); if(el) el.focus(); }, 60);
+// ────────────────────────────────────────────────
+// INTENTIONS
+// ────────────────────────────────────────────────
+function addIntention(ambitionId) {
+  const id = Date.now().toString();
+  state.intentions.push({ id, ambitionId, text: '' });
+  save();
+  renderIntentions();
+  setTimeout(() => {
+    const el = document.getElementById('intent-' + id);
+    if (el) el.focus();
+  }, 50);
 }
 
 function removeIntention(id) {
   state.actions = state.actions.filter(a => a.intentionId !== id);
-  state.intentions = state.intentions.filter(i => i.id !== id);
-  save(); renderIntentions(); renderActions(); renderAmbitions();
+  state.intentions = state.intentions.filter(x => x.id !== id);
+  save();
+  renderIntentions();
+  renderActions();
 }
 
 function updateIntention(id, val) {
   const x = state.intentions.find(i => i.id === id);
   if (x) { x.text = val; save(); }
+  renderActionHeaders();
 }
 
 function renderIntentions() {
   const c = document.getElementById('intentions-container');
   c.innerHTML = '';
-  if (!state.ambitions.length) {
-    c.innerHTML = `<div style="text-align:center;padding:40px;color:var(--grey-400);font-size:.85rem;">No ambitions defined yet — return to Step 01 to get started.</div>`;
-    return;
-  }
   state.ambitions.forEach(a => {
+    const div = document.createElement('div');
+    div.className = 'section-card';
     const intents = state.intentions.filter(i => i.ambitionId === a.id);
-    const card = document.createElement('div');
-    card.className = 'k-card card-teal';
-    const rowsHtml = intents.map((intent, idx) => `
-      <div class="inner-card intent-inner">
-        <div class="inner-card-header">
-          <span class="pill pill-teal">Intention ${String(idx+1).padStart(2,'0')}</span>
-          <button class="btn-icon" style="margin-left:auto;" onclick="removeIntention('${intent.id}')">✕</button>
-        </div>
-        <textarea class="k-textarea" id="int-${intent.id}"
-          placeholder="Describe the intentional behaviour or mindset shift… e.g. Lead every client conversation with curiosity and open questions before offering solutions…"
-          oninput="updateIntention('${intent.id}',this.value)">${esc(intent.text)}</textarea>
-      </div>`).join('');
-
-    card.innerHTML = `
-      <div class="k-card-header" onclick="toggleCard(this)">
-        <span class="pill pill-blue">Ambition</span>
-        <h3>${esc(a.title) || '<span style="color:var(--grey-400);font-style:italic;font-weight:400;">Untitled Ambition</span>'}</h3>
-        <span class="count-chip">${intents.length} intentions</span>
-        <button class="toggle-chevron open">▶</button>
+    const isOpen = intents.length > 0 || true;
+    div.innerHTML = `
+      <div class="section-card-header ${isOpen ? 'open' : ''}" onclick="toggleCard(this)">
+        <span class="linked-badge tag-accent">Ambition</span>
+        <h3>${esc(a.title || 'Untitled Ambition')}</h3>
+        <span class="toggle-icon">▶</span>
       </div>
-      <div class="k-card-body collapsible">
-        <div id="int-list-${a.id}">${rowsHtml}</div>
-        <button class="btn-ghost" onclick="addIntention('${a.id}')">+ Add Intention</button>
+      <div class="section-card-body ${isOpen ? 'open' : ''}" id="intent-body-${a.id}">
+        <div id="intent-list-${a.id}"></div>
+        <button class="add-row" onclick="addIntention('${a.id}')">
+          <span class="plus">+</span> Add intention
+        </button>
       </div>`;
-    c.appendChild(card);
-    autoResize(card);
+    c.appendChild(div);
+
+    const list = div.querySelector(`#intent-list-${a.id}`);
+    intents.forEach(intent => {
+      const row = document.createElement('div');
+      row.className = 'intent-row';
+      row.innerHTML = `
+        <textarea class="intent-input" id="intent-${intent.id}" placeholder="e.g. Lead with curiosity before judgement…"
+          oninput="updateIntention('${intent.id}',this.value)">${esc(intent.text)}</textarea>
+        <button class="del-btn" onclick="removeIntention('${intent.id}')">✕</button>`;
+      list.appendChild(row);
+    });
   });
 }
 
-/* ═══════════════════════════════════════════
-   ACTIONS
-═══════════════════════════════════════════ */
-function addAction(iid) {
-  const id = 'ac' + Date.now();
-  const intent = state.intentions.find(i => i.id === iid);
-  state.actions.push({ id, intentionId:iid, ambitionId:intent?.ambitionId||'', title:'', description:'', outcome:'', startDate:'', endDate:'', status:'planned' });
-  save(); renderActions();
-  setTimeout(() => { const el = document.getElementById('act-title-'+id); if(el) el.focus(); }, 60);
+function renderIntentionHeaders() {
+  // lightweight re-render of just headers
+  state.ambitions.forEach(a => {
+    const header = document.querySelector(`#intent-body-${a.id}`)?.previousElementSibling?.querySelector('h3');
+    if (header) header.textContent = a.title || 'Untitled Ambition';
+  });
+}
+
+// ────────────────────────────────────────────────
+// ACTIONS
+// ────────────────────────────────────────────────
+function addAction(intentionId) {
+  const id = Date.now().toString();
+  const intent = state.intentions.find(i => i.id === intentionId);
+  state.actions.push({ id, intentionId, ambitionId: intent ? intent.ambitionId : '', text: '' });
+  save();
+  renderActions();
+  setTimeout(() => {
+    const el = document.getElementById('action-' + id);
+    if (el) el.focus();
+  }, 50);
 }
 
 function removeAction(id) {
   state.actions = state.actions.filter(a => a.id !== id);
-  save(); renderActions();
+  save();
+  renderActions();
 }
 
-function updateAction(id, field, val) {
+function updateAction(id, val) {
   const x = state.actions.find(a => a.id === id);
-  if (x) { x[field] = val; save(); }
-}
-
-function setStatus(id, status) {
-  updateAction(id, 'status', status);
-  const row = document.getElementById('srow-'+id);
-  if (row) row.innerHTML = statusHtml(id, status);
-}
-
-function statusHtml(id, current) {
-  return `
-    <button class="status-pill sp-planned${current==='planned'?' active':''}" onclick="setStatus('${id}','planned')">○ Planned</button>
-    <button class="status-pill sp-inprogress${current==='inprogress'?' active':''}" onclick="setStatus('${id}','inprogress')">◐ In Progress</button>
-    <button class="status-pill sp-complete${current==='complete'?' active':''}" onclick="setStatus('${id}','complete')">● Complete</button>`;
+  if (x) { x.text = val; save(); }
 }
 
 function renderActions() {
   const c = document.getElementById('actions-container');
   c.innerHTML = '';
-  if (!state.ambitions.length) {
-    c.innerHTML = `<div style="text-align:center;padding:40px;color:var(--grey-400);font-size:.85rem;">No ambitions defined yet — return to Step 01 to get started.</div>`;
-    return;
-  }
   state.ambitions.forEach(a => {
+    const ambDiv = document.createElement('div');
+    ambDiv.style.marginBottom = '20px';
+
+    const header = document.createElement('div');
+    header.style.cssText = 'font-family:Playfair Display,serif;font-weight:700;font-size:1rem;padding:10px 0 6px;border-bottom:1px solid var(--pale);margin-bottom:12px;color:var(--mid);';
+    header.innerHTML = `<span class="linked-badge tag-accent" style="margin-right:8px;">Ambition</span>${esc(a.title || 'Untitled Ambition')}`;
+    ambDiv.appendChild(header);
+
     const intents = state.intentions.filter(i => i.ambitionId === a.id);
-    const wrap = document.createElement('div');
-    wrap.style.marginBottom = '24px';
-
-    const ambHead = document.createElement('div');
-    ambHead.style.cssText = 'display:flex;align-items:center;gap:10px;padding:10px 0;margin-bottom:14px;border-bottom:2px solid var(--kpmg-blue-pale);';
-    ambHead.innerHTML = `<span class="pill pill-blue">Ambition</span>
-      <span style="font-weight:600;color:var(--kpmg-blue);font-size:.9rem;">${esc(a.title||'Untitled Ambition')}</span>`;
-    wrap.appendChild(ambHead);
-
-    if (!intents.length) {
+    if (intents.length === 0) {
       const msg = document.createElement('div');
-      msg.style.cssText = 'font-size:.82rem;color:var(--grey-400);padding:8px 0 16px;font-style:italic;';
-      msg.textContent = 'Add intentions in Step 02 to link actions here.';
-      wrap.appendChild(msg);
+      msg.style.cssText = 'font-size:0.82rem;color:var(--mid);padding:8px 0 16px;';
+      msg.textContent = 'Add intentions in Step 2 to link actions here.';
+      ambDiv.appendChild(msg);
     }
 
     intents.forEach(intent => {
-      const icard = document.createElement('div');
-      icard.className = 'k-card card-purple';
-      icard.style.marginBottom = '12px';
+      const card = document.createElement('div');
+      card.className = 'section-card';
+      card.style.marginBottom = '12px';
       const acts = state.actions.filter(x => x.intentionId === intent.id);
-
-      const actHtml = acts.map((act, idx) => `
-        <div class="inner-card action-inner" id="ac-card-${act.id}">
-          <div class="inner-card-header">
-            <span class="pill pill-purple">Action ${String(idx+1).padStart(2,'0')}</span>
-            <button class="btn-icon" style="margin-left:auto;" onclick="removeAction('${act.id}')">✕</button>
-          </div>
-          <div class="status-row" id="srow-${act.id}">${statusHtml(act.id, act.status)}</div>
-          <div class="field-group">
-            <label class="field-label">Action Title</label>
-            <input class="k-input" id="act-title-${act.id}" placeholder="Brief, clear title for this action…"
-              value="${esc(act.title)}" oninput="updateAction('${act.id}','title',this.value)">
-          </div>
-          <div class="field-group">
-            <label class="field-label">Description</label>
-            <textarea class="k-textarea" style="min-height:68px;" placeholder="What specifically will be done and how…"
-              oninput="updateAction('${act.id}','description',this.value)">${esc(act.description)}</textarea>
-          </div>
-          <div class="field-group">
-            <label class="field-label">Expected Outcome</label>
-            <textarea class="k-textarea" style="min-height:56px;" placeholder="What will success look like when this action is complete…"
-              oninput="updateAction('${act.id}','outcome',this.value)">${esc(act.outcome)}</textarea>
-          </div>
-          <div class="field-grid">
-            <div class="field-group">
-              <label class="field-label">Start Date</label>
-              <input class="k-input" type="date" value="${esc(act.startDate)}"
-                oninput="updateAction('${act.id}','startDate',this.value)">
-            </div>
-            <div class="field-group">
-              <label class="field-label">End Date</label>
-              <input class="k-input" type="date" value="${esc(act.endDate)}"
-                oninput="updateAction('${act.id}','endDate',this.value)">
-            </div>
-          </div>
-        </div>`).join('');
-
-      icard.innerHTML = `
-        <div class="k-card-header" onclick="toggleCard(this)">
-          <span class="pill pill-teal">Intention</span>
-          <h3>${esc(intent.text) || '<span style="color:var(--grey-400);font-style:italic;font-weight:400;">Untitled Intention</span>'}</h3>
-          <span class="count-chip">${acts.length} actions</span>
-          <button class="toggle-chevron open">▶</button>
+      card.innerHTML = `
+        <div class="section-card-header open" onclick="toggleCard(this)">
+          <span class="linked-badge tag-moss">Intention</span>
+          <h3>${esc(intent.text || 'Untitled Intention')}</h3>
+          <span class="toggle-icon">▶</span>
         </div>
-        <div class="k-card-body collapsible">
-          <div id="acts-${intent.id}">${actHtml}</div>
-          <button class="btn-ghost" onclick="addAction('${intent.id}')">+ Add Action</button>
+        <div class="section-card-body open" id="action-body-${intent.id}">
+          <div id="action-list-${intent.id}"></div>
+          <button class="add-row" onclick="addAction('${intent.id}')">
+            <span class="plus">+</span> Add action
+          </button>
         </div>`;
-      wrap.appendChild(icard);
-      autoResize(icard);
+      ambDiv.appendChild(card);
+
+      const list = card.querySelector(`#action-list-${intent.id}`);
+      acts.forEach(act => {
+        const row = document.createElement('div');
+        row.className = 'action-row';
+        row.innerHTML = `
+          <textarea class="action-input" id="action-${act.id}" placeholder="e.g. Schedule weekly 1:1 with each team member by Friday…"
+            oninput="updateAction('${act.id}',this.value)">${esc(act.text)}</textarea>
+          <button class="del-btn" onclick="removeAction('${act.id}')">✕</button>`;
+        list.appendChild(row);
+      });
     });
-    c.appendChild(wrap);
+
+    c.appendChild(ambDiv);
   });
 }
 
-/* ═══════════════════════════════════════════
-   PATHWAY
-═══════════════════════════════════════════ */
-function renderPathway() {
-  const c = document.getElementById('pathway-content');
+function renderActionHeaders() {
+  state.intentions.forEach(intent => {
+    const header = document.querySelector(`#action-body-${intent.id}`)?.previousElementSibling?.querySelector('h3');
+    if (header) header.textContent = intent.text || 'Untitled Intention';
+  });
+}
+
+// ────────────────────────────────────────────────
+// SUMMARY
+// ────────────────────────────────────────────────
+function renderSummary() {
+  const c = document.getElementById('summary-content');
   c.innerHTML = '';
 
-  // Profile header
-  const ph = document.createElement('div');
-  ph.className = 'pathway-header-card';
+  const profileDiv = document.createElement('div');
+  profileDiv.style.cssText = 'display:flex;align-items:center;gap:14px;margin-bottom:28px;padding:16px 20px;background:var(--warm);border-radius:6px;border:1.5px solid var(--pale);';
   const avatarHtml = state.profile.avatar
-    ? `<img src="${state.profile.avatar}" style="width:48px;height:48px;border-radius:50%;object-fit:cover;border:2px solid rgba(255,255,255,.3);">`
-    : `<div style="width:48px;height:48px;border-radius:50%;background:rgba(255,255,255,.15);border:2px solid rgba(255,255,255,.3);display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:1.2rem;color:var(--white);">${(state.profile.name||'A').charAt(0)}</div>`;
-  ph.innerHTML = `${avatarHtml}
-    <div style="flex:1;">
-      <h2>${esc(state.profile.name||'Ambition Pathway')}</h2>
-      <div style="font-size:.78rem;color:rgba(255,255,255,.55);margin-top:2px;">${esc([state.profile.role,state.profile.org].filter(Boolean).join(' · ')||'KPMG Ambition Coaching')}</div>
-    </div>
-    <span class="pill" style="background:rgba(255,255,255,.12);color:rgba(255,255,255,.8);">${new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'})}</span>`;
-  c.appendChild(ph);
+    ? `<img src="${state.profile.avatar}" style="width:48px;height:48px;border-radius:50%;object-fit:cover;border:2px solid var(--ink);">`
+    : `<div style="width:48px;height:48px;border-radius:50%;background:var(--pale);border:2px solid var(--ink);display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-weight:700;font-size:1.2rem;">${(state.profile.name||'?').charAt(0)}</div>`;
+  profileDiv.innerHTML = `${avatarHtml}<div><div style="font-weight:700;font-size:1rem;">${esc(state.profile.name||'Your Name')}</div><div style="font-size:0.82rem;color:var(--mid);">${esc([state.profile.role,state.profile.org].filter(Boolean).join(' · ') || 'Edit profile to add details')}</div></div>`;
+  c.appendChild(profileDiv);
 
-  if (!state.ambitions.length) {
-    c.innerHTML += `<div style="text-align:center;padding:60px;color:var(--grey-400);font-size:.9rem;font-style:italic;">No ambitions defined yet. Complete the three steps to build your pathway.</div>`;
-    return;
-  }
+  state.ambitions.forEach(a => {
+    const ambCard = document.createElement('div');
+    ambCard.className = 'summary-ambition-card';
+    ambCard.innerHTML = `<h3>${esc(a.title || 'Untitled Ambition')}</h3><p>${esc(a.body || '—')}</p>${a.guardrail ? `<div style="margin-top:12px;font-size:0.78rem;opacity:0.6;letter-spacing:0.06em;text-transform:uppercase;font-weight:600;">Guardrail: <span style="font-weight:400;text-transform:none;letter-spacing:0;">${esc(a.guardrail)}</span></div>` : ''}`;
+    c.appendChild(ambCard);
 
-  // Grogu Commentary Section
-  if (state.groguCommentary && state.groguCommentary.length) {
-    const gc = document.createElement('div');
-    gc.style.marginBottom = '28px';
-    gc.innerHTML = `<div style="font-size:.75rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--kpmg-blue);margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid var(--kpmg-blue-pale);">🐸 Grogu Commentary</div>`;
-    state.groguCommentary.forEach(entry => {
-      const stepLabels = { ambition:'Ambitions', intention:'Intentions', action:'Actions' };
-      const date = new Date(entry.savedAt).toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' });
-      const div = document.createElement('div');
-      div.className = 'grogu-commentary-strip';
-      div.innerHTML = `<div class="grogu-commentary-head">
-          <span>🐸 Ask Grogu</span>
-          <span style="color:var(--grey-400);font-weight:400;text-transform:none;letter-spacing:0;">·</span>
-          <span style="color:var(--grey-500);font-weight:400;text-transform:none;letter-spacing:0;">${stepLabels[entry.step]||entry.step} · ${date}</span>
-          <button onclick="removeCommentary('${entry.id}')" class="btn-icon" style="margin-left:auto;font-size:.8rem;" title="Remove">✕</button>
-        </div>
-        <div class="grogu-commentary-text">${esc(entry.text)}</div>`;
-      gc.appendChild(div);
-    });
-    c.appendChild(gc);
-  }
-
-  state.ambitions.forEach((a, i) => {
-    const wrap = document.createElement('div');
-    wrap.className = 'pathway-ambition-card';
-
-    const guardrailsHtml = a.guardrails.filter(Boolean).map(g =>
-      `<span class="guardrail-tag">⚡ ${esc(g)}</span>`).join('');
-
-    wrap.innerHTML = `
-      <div class="pathway-amb-head">
-        <div class="eyebrow">Ambition ${String(i+1).padStart(2,'0')}</div>
-        <h3>${esc(a.title||'Untitled Ambition')}</h3>
-        ${a.context ? `<p>${esc(a.context)}</p>` : ''}
-      </div>
-      ${guardrailsHtml ? `<div class="pathway-guardrails">${guardrailsHtml}</div>` : ''}
-      <div class="pathway-body" id="pathway-body-${a.id}"></div>`;
-    c.appendChild(wrap);
-
-    const body = wrap.querySelector(`#pathway-body-${a.id}`);
     const intents = state.intentions.filter(i => i.ambitionId === a.id);
-    if (!intents.length) {
-      body.innerHTML = `<p style="font-size:.82rem;color:var(--grey-400);font-style:italic;">No intentions added for this ambition.</p>`;
-    }
-    intents.forEach(intent => {
-      const acts = state.actions.filter(x => x.intentionId === intent.id);
+    if (intents.length) {
       const grid = document.createElement('div');
-      grid.className = 'pathway-grid';
-      grid.style.marginBottom = '14px';
+      grid.className = 'summary-grid';
 
       const intentCol = document.createElement('div');
-      intentCol.className = 'pathway-col';
-      intentCol.innerHTML = `<div class="pathway-col-head">Intention</div>
-        <div class="pathway-item">
-          <span class="pathway-item-arrow">›</span>
-          <span>${esc(intent.text||'—')}</span>
-        </div>`;
+      intentCol.className = 'summary-col-card';
+      intentCol.innerHTML = `<h4>Intentions</h4>`;
+      intents.forEach(intent => {
+        if (intent.text) intentCol.innerHTML += `<div class="summary-item">${esc(intent.text)}</div>`;
+      });
 
       const actCol = document.createElement('div');
-      actCol.className = 'pathway-col';
-      actCol.innerHTML = `<div class="pathway-col-head">Actions</div>`;
-      if (!acts.length) {
-        actCol.innerHTML += `<div style="font-size:.78rem;color:var(--grey-400);font-style:italic;">No actions added.</div>`;
-      }
-      const siMap = { planned:'si-planned', inprogress:'si-progress', complete:'si-complete' };
-      acts.forEach(act => {
-        actCol.innerHTML += `
-          <div class="pathway-item">
-            <div class="status-indicator ${siMap[act.status]||'si-planned'}"></div>
-            <div>
-              <div style="font-weight:600;font-size:.82rem;">${esc(act.title||'Untitled Action')}</div>
-              ${act.outcome ? `<div style="font-size:.75rem;color:var(--grey-500);margin-top:2px;">${esc(act.outcome)}</div>` : ''}
-              ${(act.startDate||act.endDate) ? `<div style="font-size:.7rem;color:var(--grey-400);margin-top:3px;font-family:monospace;">${act.startDate||'—'} → ${act.endDate||'—'}</div>` : ''}
-            </div>
-          </div>`;
+      actCol.className = 'summary-col-card';
+      actCol.innerHTML = `<h4>Actions</h4>`;
+      intents.forEach(intent => {
+        state.actions.filter(x => x.intentionId === intent.id).forEach(act => {
+          if (act.text) actCol.innerHTML += `<div class="summary-item">${esc(act.text)}</div>`;
+        });
       });
+
       grid.appendChild(intentCol);
       grid.appendChild(actCol);
-      body.appendChild(grid);
-    });
+      c.appendChild(grid);
+    }
+
+    const spacer = document.createElement('div');
+    spacer.style.height = '24px';
+    c.appendChild(spacer);
   });
+
+  if (!state.ambitions.length) {
+    c.innerHTML += `<div style="text-align:center;padding:60px 20px;color:var(--mid);font-size:0.9rem;">No ambitions yet — head to the Build tab to get started.</div>`;
+  }
+
+  // Grogu Commentary
+  if (state.groguCommentary && state.groguCommentary.length) {
+    const gcWrap = document.createElement('div');
+    gcWrap.style.marginTop = '24px';
+    gcWrap.innerHTML = `<div style="font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid var(--pale);">🐸 Grogu Commentary</div>`;
+    state.groguCommentary.forEach(entry => {
+      const stepLabel = {ambition:'Ambitions',intention:'Intentions',action:'Actions'}[entry.step]||entry.step;
+      const date = new Date(entry.savedAt).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
+      const div = document.createElement('div');
+      div.className = 'grogu-commentary';
+      div.innerHTML = `<div class="grogu-commentary-head">🐸 Ask Grogu <span style="color:var(--pale);margin:0 4px;">·</span>${stepLabel} <span style="color:var(--pale);margin:0 4px;">·</span>${date}
+        <button onclick="removeGroguCommentary('${entry.id}')" class="del-btn" style="margin-left:auto;">✕</button></div>
+        <div class="grogu-commentary-text">${esc(entry.text)}</div>`;
+      gcWrap.appendChild(div);
+    });
+    c.appendChild(gcWrap);
+  }
 }
 
-/* ═══════════════════════════════════════════
-   AI ADVISOR
-═══════════════════════════════════════════ */
-async function aiAdvise(type, mode) {
-  const respEl = document.getElementById(`ai-${type.substring(0,3)}-resp`);
-  respEl.style.display = 'flex';
-  respEl.style.alignItems = 'center';
-  respEl.innerHTML = `<div class="ai-thinking"><div class="dot"></div><div class="dot"></div><div class="dot"></div><span style="margin-left:8px;">Analysing your data…</span></div>`;
+// ────────────────────────────────────────────────
+// NAVIGATION
+// ────────────────────────────────────────────────
+function goStep(n) {
+  document.getElementById('step-' + currentStep).style.display = 'none';
+  currentStep = n;
+  document.getElementById('step-' + n).style.display = 'block';
+  if (n === 2) renderIntentions();
+  if (n === 3) renderActions();
+  updateProgress();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
 
-  const ambSummary = state.ambitions.map((a,i) =>
-    `Ambition ${i+1}: "${a.title}" | Context: ${a.context||'not provided'} | Guardrails: ${a.guardrails.filter(Boolean).join(', ')||'none'}`
-  ).join('\n') || '(none defined)';
-  const intSummary = state.intentions.map(i => `- ${i.text}`).join('\n') || '(none)';
-  const actSummary = state.actions.map(a => `- ${a.title}: ${a.description||''} | Outcome: ${a.outcome||''}`).join('\n') || '(none)';
+function updateProgress() {
+  for (let i = 1; i <= 3; i++) {
+    const el = document.getElementById('prog-' + i);
+    el.className = 'prog-step ' + (i < currentStep ? 'done' : i === currentStep ? 'active' : '');
+    const dot = el.querySelector('.prog-dot');
+    dot.textContent = i < currentStep ? '✓' : i;
+  }
+  for (let i = 1; i <= 2; i++) {
+    const line = document.getElementById('prog-line-' + i);
+    line.className = 'prog-line ' + (i < currentStep ? 'done' : '');
+  }
+}
+
+function viewSummary() {
+  switchTab('summary', document.querySelectorAll('.tab')[1]);
+}
+
+function switchTab(name, el) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('tab-' + name).classList.add('active');
+  if (name === 'summary') renderSummary();
+}
+
+function toggleCard(header) {
+  header.classList.toggle('open');
+  header.nextElementSibling.classList.toggle('open');
+}
+
+// ────────────────────────────────────────────────
+// AI CHALLENGE
+// ────────────────────────────────────────────────
+async function aiChallenge(type, mode) {
+  const responseEl = document.getElementById('ai-' + type + '-response');
+  responseEl.style.display = 'flex';
+  responseEl.innerHTML = '<div class="ai-loading"><div class="dot"></div><div class="dot"></div><div class="dot"></div><span style="margin-left:4px;font-size:0.82rem;color:var(--gold);">Thinking…</span></div>';
+
+  const ambitionSummary = state.ambitions.map((a, i) =>
+    `Ambition ${i+1}: "${a.title}" — ${a.body}${a.guardrail ? ` (Guardrail: ${a.guardrail})` : ''}`
+  ).join('\n') || '(No ambitions set yet)';
+
+  const intentionSummary = state.intentions.map(i => `- ${i.text}`).join('\n') || '(No intentions set yet)';
+  const actionSummary = state.actions.map(a => `- ${a.text}`).join('\n') || '(No actions set yet)';
 
   const prompts = {
     ambition: {
-      forge: `Based on this context, write ONE powerful, specific, ambitious one-sentence ambition statement. Then in 2 sentences explain why it demands courageous action.\n\n${ambSummary}`,
-      bolder: `Review these ambitions and challenge the person to think significantly bolder. What would 10× look like? Be specific and direct.\n\n${ambSummary}`,
-      guardrails: `Suggest 3 concrete, specific guardrails that keep this ambition ethical, sustainable, and grounded.\n\n${ambSummary}`,
-      challenge: `Ask 3 powerful coaching questions that expose blind spots or untapped potential in these ambitions.\n\n${ambSummary}`
+      stretch: `You are a bold executive coach. Review these ambitions and push the person to think MUCH bigger. What would 10× look like? What's the most ambitious version? Be direct, inspiring, and specific.\n\nAmbitions:\n${ambitionSummary}\n\nCoach's challenge (2-3 sentences):`,
+      guardrails: `As a coach, suggest 2-3 specific guardrails or constraints this person should set to keep their ambition ethical, sustainable and grounded. Be concrete.\n\nAmbitions:\n${ambitionSummary}\n\nSuggested guardrails:`,
+      question: `Challenge this person's thinking with 3 powerful coaching questions that will expose blind spots, assumptions, or untapped potential in their ambitions.\n\nAmbitions:\n${ambitionSummary}\n\n3 coaching questions:`,
+      examples: `Provide 2-3 real-world examples of teams or leaders who achieved something similarly ambitious. Make them relevant and inspiring. Keep it brief.\n\nAmbitions:\n${ambitionSummary}\n\nInspiring examples:`
     },
     intention: {
-      behaviours: `Based on these ambitions, name 3 specific, observable behavioural intentions the person should START doing. Be concrete.\n\nAmbitions:\n${ambSummary}\n\nCurrent intentions:\n${intSummary}`,
-      mindset: `Identify the 2-3 most critical mindset shifts required to achieve these ambitions.\n\n${ambSummary}`,
-      obstacles: `Name the most likely internal mindset or behavioural blockers that will undermine success. Be direct.\n\nAmbitions:\n${ambSummary}\n\nIntentions:\n${intSummary}`,
-      reframe: `Suggest stronger, more impactful versions of the current intentions — behaviourally specific and tied to the ambitions.\n\nAmbitions:\n${ambSummary}\n\nCurrent intentions:\n${intSummary}`
+      behaviours: `Based on these ambitions, suggest 3-4 specific, concrete behavioural intentions that would make the biggest difference. Be specific about what the person should START doing.\n\nAmbitions:\n${ambitionSummary}\n\nCurrent intentions:\n${intentionSummary}\n\nKey behaviour suggestions:`,
+      mindset: `What are the 2-3 most important mindset shifts this person needs to achieve their ambitions? Be direct and specific.\n\nAmbitions:\n${ambitionSummary}\n\nMindset shifts needed:`,
+      obstacles: `What are the most likely internal mindset or behavioural obstacles that will get in the way of achieving these ambitions? Be honest and specific.\n\nAmbitions:\n${ambitionSummary}\n\nKey obstacles to watch for:`,
+      reframe: `Take the current intentions and suggest how to reframe or strengthen them to be more specific, impactful and behaviourally observable.\n\nAmbitions:\n${ambitionSummary}\n\nCurrent intentions:\n${intentionSummary}\n\nStrengthened intentions:`
     },
     action: {
-      specific: `Rewrite 2-3 of these actions to be more specific, time-bound, and measurable.\n\n${actSummary}`,
-      sequence: `Suggest the optimal sequence for these actions to build momentum. Explain the logic briefly.\n\nAmbitions:\n${ambSummary}\n\nActions:\n${actSummary}`,
-      missing: `What critical actions are missing? What is the most important gap?\n\nAmbitions:\n${ambSummary}\n\nCurrent actions:\n${actSummary}`,
-      quickwins: `Identify 2-3 quick-win actions achievable in the next 2 weeks to build immediate momentum.\n\nAmbitions:\n${ambSummary}`
+      specific: `Review these actions and suggest how to make them more specific, measurable, and time-bound. Show examples of vague vs. strong versions.\n\nAmbitions:\n${ambitionSummary}\n\nIntentions:\n${intentionSummary}\n\nCurrent actions:\n${actionSummary}\n\nMore specific versions:`,
+      sequence: `Suggest an optimal sequence or prioritisation for these actions. What should happen first to create momentum?\n\nActions:\n${actionSummary}\n\nRecommended sequence and rationale:`,
+      missing: `What critical actions are missing from this plan to achieve the ambitions? What's the most important gap?\n\nAmbitions:\n${ambitionSummary}\n\nCurrent actions:\n${actionSummary}\n\nMissing critical actions:`,
+      'quick-wins': `Identify 2-3 quick-win actions that could be done in the next 2 weeks to build momentum toward the ambitions.\n\nAmbitions:\n${ambitionSummary}\n\nContext:\n${actionSummary}\n\nQuick wins:`
     }
   };
 
-  const sys = `You are a senior KPMG executive coach helping a leader build ambitious goals and accountability. Be direct, specific, and concise (3–5 sentences). Never give generic advice — respond only to this person's actual content. Write in confident flowing prose, no bullet points.`;
+  const systemPrompt = `You are an experienced executive coach helping a team leader set ambitious goals and build accountability. Be direct, specific, concise (3-5 sentences max), and genuinely challenging. Avoid generic advice. Focus on what's most impactful for THIS person's specific ambitions. Never use bullet points — respond in flowing prose.`;
 
   try {
     const res = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'x-api-key': API_KEY,
+        'x-api-key': state.apiKey || '',
         'anthropic-version': '2023-06-01',
         'anthropic-dangerous-direct-browser-access': 'true'
       },
       body: JSON.stringify({
         model: 'claude-sonnet-4-5',
         max_tokens: 1000,
-        system: sys,
-        messages: [{ role:'user', content: prompts[type][mode] }]
+        system: systemPrompt,
+        messages: [{ role: 'user', content: prompts[type][mode] }]
       })
     });
     const data = await res.json();
-    const text = data.content?.find(b => b.type==='text')?.text || data.error?.message || 'No response received.';
-    respEl.style.display = 'block';
-    respEl.style.alignItems = '';
-    respEl.textContent = text;
-    // store last response for saving
-    respEl.dataset.lastResponse = text;
-    respEl.dataset.step = type;
-    // show save action buttons
-    const actionsEl = document.getElementById(`ai-${type.substring(0,3)}-actions`);
-    if (actionsEl) actionsEl.style.display = 'flex';
-  } catch(e) {
-    respEl.style.display = 'block';
-    respEl.style.alignItems = '';
-    respEl.textContent = 'AI Advisor unavailable — please check your API key and connection.';
+    const text = data.content?.find(b => b.type === 'text')?.text || data.error?.message || 'No response received.';
+    responseEl.style.display = 'block';
+    responseEl.textContent = text;
+    responseEl.dataset.lastResponse = text;
+    responseEl.dataset.step = type;
+    const saveRow = document.getElementById('ai-' + type + '-save');
+    if (saveRow) saveRow.style.display = 'flex';
+  } catch (e) {
+    responseEl.style.display = 'block';
+    responseEl.textContent = 'Unable to reach Grogu. Please check your connection and try again.';
   }
 }
 
-/* ═══════════════════════════════════════════
-   SAVE GROGU RESPONSE
-═══════════════════════════════════════════ */
-function saveGroguResponse(step, saveAs) {
-  const respEl = document.getElementById(`ai-${step.substring(0,3)}-resp`);
+// ────────────────────────────────────────────────
+// SAVE GROGU RESPONSE
+// ────────────────────────────────────────────────
+function saveGrogu(step, saveAs) {
+  const respEl = document.getElementById('ai-' + step + '-response');
   const text = respEl?.dataset?.lastResponse;
   if (!text) { alert('No Grogu response to save yet.'); return; }
 
   if (saveAs === 'commentary') {
-    // Save to groguCommentary array
-    if (!state.groguCommentary) state.groguCommentary = [];
-    state.groguCommentary.push({
-      id: 'gc' + Date.now(),
-      step,
-      text,
-      savedAt: new Date().toISOString()
-    });
-    save();
-    showToast('💾 Saved as Grogu Commentary — will appear in your export.');
+    state.groguCommentary.push({ id: 'gc' + Date.now(), step, text, savedAt: new Date().toISOString() });
+    save(); showToast('📎 Saved as Grogu Commentary — appears in Pathway view.');
 
   } else if (saveAs === 'intention') {
-    // Add as intention — linked to first ambition if exists
-    if (!state.ambitions.length) {
-      alert('Please add an ambition first before saving intentions.');
-      return;
-    }
-    // Show ambition picker if multiple
+    if (!state.ambitions.length) { alert('Add an ambition first.'); return; }
     if (state.ambitions.length === 1) {
-      const id = 'i' + Date.now();
-      state.intentions.push({ id, ambitionId: state.ambitions[0].id, text });
-      save();
-      showToast('✅ Saved as Intention — visible in Step 02.');
-    } else {
-      showAmbitionPicker(text, 'intention');
-    }
+      state.intentions.push({ id: Date.now().toString(), ambitionId: state.ambitions[0].id, text });
+      save(); showToast('✅ Saved as Intention — visible in Step 02.');
+    } else { showAmbPicker(text, 'intention'); }
 
   } else if (saveAs === 'action') {
-    // Add as action — need an intention to link to
-    if (!state.intentions.length) {
-      alert('Please add at least one intention first before saving actions.');
-      return;
-    }
+    if (!state.intentions.length) { alert('Add an intention first.'); return; }
     if (state.intentions.length === 1) {
-      const id = 'ac' + Date.now();
-      state.actions.push({
-        id, intentionId: state.intentions[0].id,
-        ambitionId: state.intentions[0].ambitionId,
-        title: text.substring(0, 80),
-        description: text,
-        outcome: '', startDate: '', endDate: '', status: 'planned'
-      });
-      save();
-      showToast('✅ Saved as Action — visible in Step 03.');
-    } else {
-      showIntentionPicker(text);
-    }
+      const intent = state.intentions[0];
+      state.actions.push({ id: Date.now().toString(), intentionId: intent.id, ambitionId: intent.ambitionId, text });
+      save(); showToast('✅ Saved as Action — visible in Step 03.');
+    } else { showIntPicker(text); }
 
   } else if (saveAs === 'guardrail') {
-    if (!state.ambitions.length) {
-      alert('Please add an ambition first.');
-      return;
-    }
+    if (!state.ambitions.length) { alert('Add an ambition first.'); return; }
     if (state.ambitions.length === 1) {
-      state.ambitions[0].guardrails.push(text);
-      save();
-      renderAmbitions();
-      showToast('✅ Saved as Guardrail on your ambition.');
-    } else {
-      showAmbitionPicker(text, 'guardrail');
-    }
+      // ambition-coach uses single guardrail string — append to it
+      const a = state.ambitions[0];
+      a.guardrail = a.guardrail ? a.guardrail + ' | ' + text : text;
+      save(); renderAmbitions(); showToast('✅ Saved as Guardrail on your ambition.');
+    } else { showAmbPicker(text, 'guardrail'); }
   }
 }
 
-function showAmbitionPicker(text, saveAs) {
-  const opts = state.ambitions.map((a, i) =>
-    `<option value="${a.id}">Ambition ${i+1}: ${(a.title||'Untitled').substring(0,40)}</option>`
-  ).join('');
-  const sel = document.createElement('div');
-  sel.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:999;display:flex;align-items:center;justify-content:center;';
-  sel.innerHTML = `<div style="background:var(--white);border-radius:8px;padding:28px;width:min(420px,92vw);box-shadow:0 8px 32px rgba(0,0,0,.2);">
-    <div style="font-weight:700;color:var(--kpmg-blue);margin-bottom:16px;font-size:1rem;">Link to which Ambition?</div>
-    <select id="picker-sel" class="k-input" style="margin-bottom:16px;">${opts}</select>
-    <div style="display:flex;gap:10px;justify-content:flex-end;">
-      <button class="btn-secondary" onclick="this.closest('div[style]').remove()">Cancel</button>
-      <button class="btn-primary" onclick="confirmAmbitionPick('${saveAs}','${escAttr(text)}',this)">Save</button>
-    </div>
-  </div>`;
-  document.body.appendChild(sel);
+function showAmbPicker(text, saveAs) {
+  const opts = state.ambitions.map((a,i) => `<option value="${a.id}">Ambition ${i+1}: ${(a.title||'Untitled').substring(0,40)}</option>`).join('');
+  const el = document.createElement('div');
+  el.className = 'modal-overlay open';
+  el.innerHTML = `<div class="modal" style="max-width:420px;">
+    <h2>Link to which Ambition?</h2>
+    <div class="field"><select id="amb-pick-ac" style="width:100%;padding:10px;border:1.5px solid var(--pale);border-radius:3px;font-family:'DM Sans',sans-serif;">${opts}</select></div>
+    <div class="modal-actions">
+      <button class="btn ghost" onclick="this.closest('.modal-overlay').remove()">Cancel</button>
+      <button class="btn" onclick="confirmAmbPickAC('${saveAs}','${escA(text)}',this)">Save</button>
+    </div></div>`;
+  document.body.appendChild(el);
 }
 
-function confirmAmbitionPick(saveAs, text, btn) {
-  const aid = document.getElementById('picker-sel').value;
-  const realText = btn.closest('div[style]').querySelector('select').value;
-  const ambId = document.getElementById('picker-sel').value;
+function confirmAmbPickAC(saveAs, text, btn) {
+  const ambId = document.getElementById('amb-pick-ac').value;
   if (saveAs === 'guardrail') {
     const a = state.ambitions.find(x => x.id === ambId);
-    if (a) { a.guardrails.push(text); save(); renderAmbitions(); }
+    if (a) { a.guardrail = a.guardrail ? a.guardrail + ' | ' + text : text; save(); renderAmbitions(); }
     showToast('✅ Saved as Guardrail.');
   } else if (saveAs === 'intention') {
-    const id = 'i' + Date.now();
-    state.intentions.push({ id, ambitionId: ambId, text });
-    save();
-    showToast('✅ Saved as Intention.');
+    state.intentions.push({ id: Date.now().toString(), ambitionId: ambId, text });
+    save(); showToast('✅ Saved as Intention.');
   }
-  btn.closest('[style*="position:fixed"]').remove();
+  btn.closest('.modal-overlay').remove();
 }
 
-function showIntentionPicker(text) {
+function showIntPicker(text) {
   const opts = state.intentions.map((int, i) => {
     const a = state.ambitions.find(a => a.id === int.ambitionId);
-    const label = `${a ? (a.title||'Untitled').substring(0,30) + ' › ' : ''}${(int.text||'Untitled').substring(0,40)}`;
-    return `<option value="${int.id}">${label}</option>`;
+    return `<option value="${int.id}">${a ? (a.title||'Untitled').substring(0,24) + ' › ' : ''}${(int.text||'Untitled').substring(0,36)}</option>`;
   }).join('');
-  const sel = document.createElement('div');
-  sel.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:999;display:flex;align-items:center;justify-content:center;';
-  sel.innerHTML = `<div style="background:var(--white);border-radius:8px;padding:28px;width:min(440px,92vw);box-shadow:0 8px 32px rgba(0,0,0,.2);">
-    <div style="font-weight:700;color:var(--kpmg-blue);margin-bottom:16px;font-size:1rem;">Link Action to which Intention?</div>
-    <select id="int-picker-sel" class="k-input" style="margin-bottom:16px;">${opts}</select>
-    <div style="display:flex;gap:10px;justify-content:flex-end;">
-      <button class="btn-secondary" onclick="this.closest('[style*=fixed]').remove()">Cancel</button>
-      <button class="btn-primary" onclick="confirmIntentionPick('${escAttr(text)}',this)">Save</button>
-    </div>
-  </div>`;
-  document.body.appendChild(sel);
+  const el = document.createElement('div');
+  el.className = 'modal-overlay open';
+  el.innerHTML = `<div class="modal" style="max-width:440px;">
+    <h2>Link Action to which Intention?</h2>
+    <div class="field"><select id="int-pick-ac" style="width:100%;padding:10px;border:1.5px solid var(--pale);border-radius:3px;font-family:'DM Sans',sans-serif;">${opts}</select></div>
+    <div class="modal-actions">
+      <button class="btn ghost" onclick="this.closest('.modal-overlay').remove()">Cancel</button>
+      <button class="btn" onclick="confirmIntPickAC('${escA(text)}',this)">Save</button>
+    </div></div>`;
+  document.body.appendChild(el);
 }
 
-function confirmIntentionPick(text, btn) {
-  const iid = document.getElementById('int-picker-sel').value;
+function confirmIntPickAC(text, btn) {
+  const iid = document.getElementById('int-pick-ac').value;
   const intent = state.intentions.find(i => i.id === iid);
-  const id = 'ac' + Date.now();
-  state.actions.push({
-    id, intentionId: iid,
-    ambitionId: intent ? intent.ambitionId : '',
-    title: text.substring(0, 80),
-    description: text,
-    outcome: '', startDate: '', endDate: '', status: 'planned'
-  });
-  save();
-  showToast('✅ Saved as Action — visible in Step 03.');
-  btn.closest('[style*="position:fixed"]').remove();
+  state.actions.push({ id: Date.now().toString(), intentionId: iid, ambitionId: intent ? intent.ambitionId : '', text });
+  save(); showToast('✅ Saved as Action.');
+  btn.closest('.modal-overlay').remove();
+}
+
+function removeGroguCommentary(id) {
+  state.groguCommentary = state.groguCommentary.filter(c => c.id !== id);
+  save(); renderSummary();
 }
 
 function showToast(msg) {
   const t = document.createElement('div');
-  t.style.cssText = 'position:fixed;bottom:28px;right:28px;background:var(--grey-900);color:var(--white);padding:12px 20px;border-radius:6px;font-size:.82rem;font-weight:500;z-index:9000;box-shadow:0 4px 16px rgba(0,0,0,.3);animation:fadeUp .2s ease both;';
+  t.style.cssText = 'position:fixed;bottom:24px;right:24px;background:var(--ink);color:white;padding:11px 18px;border-radius:4px;font-size:.8rem;font-weight:500;z-index:9000;box-shadow:0 4px 16px rgba(0,0,0,.2);animation:fadeIn .2s ease;';
   t.textContent = msg;
   document.body.appendChild(t);
-  setTimeout(() => t.remove(), 3200);
+  setTimeout(() => t.remove(), 3000);
 }
 
-function escAttr(s) {
-  return (s||'').replace(/'/g,"\\'").replace(/"/g,'&quot;').replace(/\n/g,' ');
-}
+function escA(s) { return (s||'').replace(/'/g, "\\'").replace(/\n/g, ' '); }
 
-function removeCommentary(id) {
-  state.groguCommentary = (state.groguCommentary||[]).filter(c => c.id !== id);
-  save(); renderPathway();
-}
-
-function goStep(n, tabEl) {
-  document.querySelectorAll('.top-tab').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.step-panel').forEach(p => p.classList.remove('active'));
-  if (tabEl) tabEl.classList.add('active');
-  document.getElementById('step-panel-' + n).classList.add('active');
-  currentStep = n;
-  if (n === 2) renderIntentions();
-  if (n === 3) renderActions();
-  if (n === 4) renderPathway();
-  updateProgress();
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
-function updateProgress() {
-  for (let i = 1; i <= 4; i++) {
-    const node = document.getElementById('prog-' + i);
-    const num = document.getElementById('prog-num-' + i);
-    node.className = 'prog-step ' + (i < currentStep ? 'done' : i === currentStep ? 'active' : '');
-    if (i < currentStep) num.textContent = '✓';
-    else if (i === 4) num.textContent = '↗';
-    else num.textContent = String(i);
-  }
-}
-
-/* ═══════════════════════════════════════════
-   TOGGLE COLLAPSE
-═══════════════════════════════════════════ */
-function toggleCard(header) {
-  const btn = header.querySelector('.toggle-chevron');
-  const body = header.nextElementSibling;
-  if (!body) return;
-  const isOpen = !body.classList.contains('closed');
-  body.classList.toggle('closed', isOpen);
-  if (btn) btn.classList.toggle('open', !isOpen);
-}
-
-/* ═══════════════════════════════════════════
-   EXPORT / IMPORT
-═══════════════════════════════════════════ */
+// ────────────────────────────────────────────────
+// EXPORT / IMPORT
+// ────────────────────────────────────────────────
 function exportJSON() {
   const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
-  a.download = `ambition-backup-${new Date().toISOString().slice(0,10)}.json`;
+  a.download = `ambition-coach-backup-${new Date().toISOString().slice(0,10)}.json`;
   a.click();
 }
 
 function importJSON(e) {
-  const f = e.target.files[0]; if (!f) return;
-  const r = new FileReader();
-  r.onload = ev => {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
     try {
-      const d = JSON.parse(ev.target.result);
-      if (d.ambitions !== undefined) {
-        state = d;
+      const data = JSON.parse(ev.target.result);
+      if (data.ambitions !== undefined) {
+        state = data;
         if (!state.groguCommentary) state.groguCommentary = [];
         save();
-        renderProfile(); renderAmbitions();
+        renderProfile();
+        renderAmbitions();
+        renderIntentions();
+        renderActions();
         alert('✓ Data restored successfully.');
-      } else alert('Invalid backup file.');
-    } catch { alert('Could not read file.'); }
+      } else {
+        alert('Invalid backup file.');
+      }
+    } catch { alert('Could not read backup file.'); }
   };
-  r.readAsText(f);
+  reader.readAsText(file);
 }
 
 function exportPDF() {
-  renderPathway();
+  renderSummary();
   setTimeout(() => {
-    const content = document.getElementById('pathway-content').innerHTML;
+    const summary = document.getElementById('summary-content').innerHTML;
     const name = state.profile.name || 'Ambition Pathway';
     const w = window.open('', '_blank');
-    w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8">
-    <title>${esc(name)} — KPMG Ambition Pathway</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+    w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>${name} — Ambition Pathway</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
-      :root{--kpmg-blue:#00338D;--kpmg-blue-mid:#0047BB;--kpmg-blue-light:#0091DA;--kpmg-blue-pale:#E8F0FB;--kpmg-teal-light:#00A3A1;--kpmg-violet:#6D2077;--white:#FFFFFF;--grey-50:#FAFAFA;--grey-100:#F5F5F5;--grey-200:#EEEEEE;--grey-400:#BDBDBD;--grey-500:#9E9E9E;--grey-600:#757575;--grey-700:#616161;--grey-800:#424242;--grey-900:#212121;}
-      *{box-sizing:border-box;margin:0;padding:0;}
-      body{font-family:'Inter',sans-serif;background:white;color:var(--grey-800);padding:36px 40px;max-width:860px;margin:0 auto;font-size:13px;line-height:1.5;}
-      .kpmg-header{display:flex;align-items:flex-start;justify-content:space-between;padding-bottom:16px;border-bottom:3px solid var(--kpmg-blue);margin-bottom:28px;}
-      .kpmg-wordmark{font-family:'Inter',sans-serif;font-weight:700;font-size:1.4rem;letter-spacing:.14em;color:var(--kpmg-blue);}
-      .kpmg-meta{text-align:right;font-size:.72rem;color:var(--grey-500);}
-      .pathway-header-card{background:var(--kpmg-blue);border-radius:6px;padding:20px 24px;margin-bottom:20px;display:flex;align-items:center;gap:14px;}
-      .pathway-header-card h2{font-family:'DM Serif Display',serif;font-size:1.3rem;color:var(--white);flex:1;}
-      .pathway-header-card .pill{font-size:.68rem;background:rgba(255,255,255,.15);color:rgba(255,255,255,.85);border-radius:20px;padding:2px 10px;}
-      .pathway-ambition-card{background:var(--white);border:1px solid var(--grey-200);border-radius:6px;overflow:hidden;margin-bottom:16px;page-break-inside:avoid;}
-      .pathway-amb-head{background:linear-gradient(135deg,var(--kpmg-blue),var(--kpmg-blue-mid));padding:16px 20px;}
-      .pathway-amb-head .eyebrow{font-size:.6rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:4px;}
-      .pathway-amb-head h3{font-family:'DM Serif Display',serif;font-size:1.05rem;color:var(--white);margin-bottom:4px;}
-      .pathway-amb-head p{font-size:.78rem;color:rgba(255,255,255,.6);line-height:1.5;}
-      .pathway-guardrails{display:flex;flex-wrap:wrap;gap:4px;padding:8px 20px;background:rgba(0,51,141,.03);border-bottom:1px solid var(--grey-100);}
-      .guardrail-tag{font-size:.66rem;color:var(--kpmg-blue);background:var(--kpmg-blue-pale);border-radius:20px;padding:2px 9px;}
-      .pathway-body{padding:14px 20px;}
-      .pathway-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;}
-      .pathway-col{background:var(--grey-50);border:1px solid var(--grey-200);border-radius:4px;padding:12px;}
-      .pathway-col-head{font-size:.6rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--grey-500);margin-bottom:8px;padding-bottom:5px;border-bottom:1px solid var(--grey-200);}
-      .pathway-item{display:flex;align-items:flex-start;gap:6px;font-size:.78rem;color:var(--grey-800);line-height:1.45;margin-bottom:6px;}
-      .pathway-item-arrow{color:var(--kpmg-teal-light);font-size:.68rem;margin-top:2px;flex-shrink:0;}
-      .status-indicator{width:7px;height:7px;border-radius:50%;flex-shrink:0;margin-top:4px;}
-      .si-planned{background:var(--grey-400);}
-      .si-progress{background:#F59E0B;}
-      .si-complete{background:#22C55E;}
-      .grogu-commentary-strip{background:rgba(0,51,141,.04);border:1px solid var(--kpmg-blue-pale);border-left:3px solid var(--kpmg-blue-light);border-radius:4px;padding:12px 14px;margin-bottom:8px;page-break-inside:avoid;}
-      .grogu-commentary-head{font-size:.62rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--kpmg-blue-light);margin-bottom:6px;}
-      .grogu-commentary-text{font-size:.8rem;color:var(--grey-700);line-height:1.6;white-space:pre-wrap;}
-      .section-label{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--kpmg-blue);margin-bottom:10px;padding-bottom:6px;border-bottom:2px solid var(--kpmg-blue-pale);}
-      @media print{body{padding:16px;} .pathway-ambition-card{page-break-inside:avoid;}}
-      .btn-icon{display:none;}
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+      body { font-family: 'DM Sans',sans-serif; color: #1a1208; background: white; padding: 40px; max-width: 800px; margin: 0 auto; }
+      h1 { font-family: 'Playfair Display',serif; font-size: 2rem; font-weight: 900; margin-bottom: 6px; }
+      .sub { font-size: 0.8rem; letter-spacing: 0.16em; text-transform: uppercase; color: #9b8c7a; margin-bottom: 28px; }
+      .summary-ambition-card { background: linear-gradient(135deg,#00338d 0%,#0091da 100%); color: #ffffff; border-radius: 6px; padding: 24px 28px; margin-bottom: 14px; }
+      .summary-ambition-card h3 { font-family: 'Playfair Display',serif; font-size: 1.3rem; font-weight: 700; margin-bottom: 8px; }
+      .summary-ambition-card p { font-size: 0.88rem; line-height: 1.65; color: #c8bfb0; }
+      .summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+      .summary-col-card { background: #f4f6fb; border: 1px solid #d0daea; border-radius: 4px; padding: 18px; }
+      .summary-col-card h4 { font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; color: #6b7fa3; font-weight: 700; margin-bottom: 10px; }
+      .summary-item { display: flex; gap: 8px; margin-bottom: 6px; font-size: 0.85rem; color: #1a3a6b; line-height: 1.5; }
+      .summary-item::before { content: '—'; color: #d0daea; flex-shrink: 0; }
+      .linked-badge { font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; padding: 2px 8px; border-radius: 20px; font-weight: 700; }
+      .tag-accent { background: rgba(200,65,10,0.1); color: #c8410a; }
+      .grogu-commentary { background: #E8F0FB; border: 1px solid #d0daea; border-left: 3px solid #0091da; border-radius: 4px; padding: 12px 14px; margin-bottom: 8px; page-break-inside: avoid; }
+      .grogu-commentary-head { font-size: .64rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #0091da; margin-bottom: 6px; }
+      .grogu-commentary-text { font-size: .82rem; color: #1a3a6b; line-height: 1.6; white-space: pre-wrap; }
+      .del-btn { display: none; }
+      @media print { body { padding: 20px; } }
     </style></head><body>
-    <div class="kpmg-header">
-      <div><div class="kpmg-wordmark">KPMG</div><div style="font-family:'DM Serif Display',serif;font-size:.9rem;font-style:italic;color:var(--grey-600);margin-top:2px;">Ambition Coaching</div></div>
-      <div class="kpmg-meta"><div style="font-weight:600;color:var(--grey-700);">Ambition Pathway</div><div>${new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'})}</div></div>
-    </div>
-    ${content}
+    <h1>${esc(name)}</h1><div class="sub">Ambition Pathway · ${new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'})}</div>
+    ${summary}
     <script>window.onload=()=>window.print();<\/script>
     </body></html>`);
     w.document.close();
-  }, 200);
+  }, 100);
 }
 
-/* ═══════════════════════════════════════════
-   UTILS
-═══════════════════════════════════════════ */
+// ────────────────────────────────────────────────
+// UTILS
+// ────────────────────────────────────────────────
 function esc(s) {
-  return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  return (s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
-function autoResize(parent) {
-  parent.querySelectorAll('textarea').forEach(t => {
-    t.style.height = 'auto';
-    t.style.height = t.scrollHeight + 'px';
-    t.addEventListener('input', function() {
-      this.style.height = 'auto';
-      this.style.height = this.scrollHeight + 'px';
-    });
-  });
-}
-
-/* ═══════════════════════════════════════════
-   BOOT
-═══════════════════════════════════════════ */
+// ────────────────────────────────────────────────
+// START
+// ────────────────────────────────────────────────
 init();
+
+// Seed an empty ambition if none
+if (!state.ambitions.length) addAmbition();
 </script>
 </body>
 </html>
