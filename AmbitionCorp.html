@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ambition Coach</title>
+<title>Ambition — Bomber's Coaching & Leadership</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -716,8 +716,8 @@
   <!-- ── HEADER ── -->
   <header>
     <div class="brand">
-      <div class="brand-title">Ambition Coach</div>
-      <div class="brand-sub">Clarity · Intention · Action</div>
+      <div class="brand-title">Bomber's</div>
+      <div class="brand-sub">Coaching & Leadership</div>
     </div>
     <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;">
       <div class="toolbar" style="margin:0;">
@@ -1458,7 +1458,7 @@ async function aiChallenge(type, mode) {
     }
   };
 
-  const systemPrompt = `You are an experienced executive coach helping a team leader set ambitious goals and build accountability. Be direct, specific, concise (3-5 sentences max), and genuinely challenging. Avoid generic advice. Focus on what's most impactful for THIS person's specific ambitions. Never use bullet points — respond in flowing prose.`;
+  const systemPrompt = `You are an experienced executive coach at Bomber's Coaching & Leadership, helping a team leader set ambitious goals and build accountability. Be direct, specific, concise (3-5 sentences max), and genuinely challenging. Avoid generic advice. Focus on what's most impactful for THIS person's specific ambitions. Never use bullet points — respond in flowing prose.`;
 
   try {
     const res = await fetch('https://api.anthropic.com/v1/messages', {
@@ -1681,7 +1681,7 @@ function exportWord() {
     const children = [];
 
     // Header
-    children.push(p([t('Ambition Coach', { bold:true, size:36, color:PRIMARY })], { spacing:{after:60} }));
+    children.push(p([t("Bomber's Coaching & Leadership", { bold:true, size:36, color:PRIMARY })], { spacing:{after:60} }));
     children.push(p([t('Ambition Pathway', { size:22, color:GREYMID, italics:true })], { spacing:{after:40} }));
     children.push(p([], { border:{bottom:{style:BorderStyle.SINGLE,size:12,color:PRIMARY,space:1}}, spacing:{after:240} }));
 
