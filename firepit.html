@@ -1,0 +1,1175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Fire Pit — Mentor Companion</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ember: #C4621A;
+    --ash: #8A7560;
+    --bone: #F0E8D6;
+    --coal: #0D0B09;
+    --char: #161210;
+    --cinder: #1E1A14;
+    --smoke: #2A2420;
+    --dim: #3A3025;
+    --fade: #5A5040;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    min-height: 100vh;
+    background: var(--coal);
+    font-family: 'Crimson Pro', Georgia, serif;
+    color: var(--bone);
+    overflow-x: hidden;
+  }
+
+  /* ─── NOISE TEXTURE OVERLAY ─────────────────────── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.5;
+  }
+
+  /* ─── SCREENS ───────────────────────────────────── */
+  .screen {
+    display: none;
+    position: relative;
+    z-index: 1;
+  }
+  .screen.active { display: flex; }
+
+  /* ─── ENTRY SCREEN ──────────────────────────────── */
+  #entry-screen {
+    min-height: 100vh;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 24px;
+    text-align: center;
+  }
+
+  .entry-glow {
+    position: fixed;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(ellipse, rgba(196,98,26,0.12) 0%, transparent 70%);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+  }
+
+  .entry-flame {
+    font-size: 56px;
+    display: block;
+    margin-bottom: 20px;
+    animation: flicker 2.4s ease-in-out infinite alternate;
+  }
+
+  .entry-title {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: clamp(2.6rem, 7vw, 4rem);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--bone);
+    margin-bottom: 8px;
+    line-height: 1;
+  }
+
+  .entry-tagline {
+    font-size: 0.78rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--fade);
+    margin-bottom: 48px;
+  }
+
+  .entry-card {
+    width: 100%;
+    max-width: 420px;
+    background: var(--char);
+    border: 1px solid var(--smoke);
+    border-radius: 12px;
+    padding: 32px 28px;
+    text-align: left;
+  }
+
+  .entry-card-label {
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--fade);
+    margin-bottom: 10px;
+    display: block;
+  }
+
+  .entry-card h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.15rem;
+    color: var(--bone);
+    margin-bottom: 8px;
+    font-weight: 400;
+  }
+
+  .entry-card p {
+    font-size: 0.88rem;
+    color: var(--ash);
+    line-height: 1.6;
+    margin-bottom: 20px;
+  }
+
+  .api-input-wrap {
+    position: relative;
+    margin-bottom: 12px;
+  }
+
+  .api-input {
+    width: 100%;
+    background: var(--cinder);
+    border: 1px solid var(--smoke);
+    border-radius: 7px;
+    padding: 13px 46px 13px 14px;
+    color: var(--bone);
+    font-family: 'Crimson Pro', serif;
+    font-size: 0.95rem;
+    outline: none;
+    transition: border-color 0.2s;
+    letter-spacing: 0.02em;
+  }
+
+  .api-input:focus { border-color: var(--ember); }
+  .api-input::placeholder { color: var(--dim); }
+
+  .toggle-vis {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: var(--fade);
+    cursor: pointer;
+    font-size: 1rem;
+    padding: 4px;
+    line-height: 1;
+  }
+
+  .btn-primary {
+    width: 100%;
+    padding: 14px;
+    background: var(--ember);
+    border: none;
+    border-radius: 7px;
+    color: var(--bone);
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.02em;
+    margin-bottom: 10px;
+  }
+
+  .btn-primary:hover { background: #D4721A; transform: translateY(-1px); }
+  .btn-primary:active { transform: translateY(0); }
+
+  .btn-ghost {
+    width: 100%;
+    padding: 12px;
+    background: transparent;
+    border: 1px solid var(--smoke);
+    border-radius: 7px;
+    color: var(--fade);
+    font-family: 'Crimson Pro', serif;
+    font-size: 0.88rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-style: italic;
+  }
+
+  .btn-ghost:hover { border-color: var(--dim); color: var(--ash); }
+
+  .entry-note {
+    font-size: 0.75rem;
+    color: var(--dim);
+    text-align: center;
+    margin-top: 16px;
+    font-style: italic;
+    line-height: 1.5;
+  }
+
+  .entry-divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 14px 0;
+  }
+  .entry-divider span {
+    font-size: 0.72rem;
+    color: var(--dim);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .entry-divider::before,
+  .entry-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--smoke);
+  }
+
+  .demo-badge {
+    display: inline-block;
+    background: rgba(196,98,26,0.15);
+    border: 1px solid rgba(196,98,26,0.3);
+    border-radius: 4px;
+    padding: 2px 8px;
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ember);
+    margin-bottom: 12px;
+  }
+
+  /* ─── HOME SCREEN ───────────────────────────────── */
+  #home-screen {
+    min-height: 100vh;
+    flex-direction: column;
+    align-items: center;
+    padding: 48px 24px 80px;
+    animation: fadeUp 0.5s ease-out;
+  }
+
+  .home-inner { width: 100%; max-width: 640px; }
+
+  .home-header {
+    text-align: center;
+    margin-bottom: 52px;
+    position: relative;
+  }
+
+  .home-flame {
+    font-size: 44px;
+    display: block;
+    margin-bottom: 16px;
+    animation: flicker 2.4s ease-in-out infinite alternate;
+  }
+
+  .home-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 6px;
+    line-height: 1;
+  }
+
+  .home-sub {
+    font-size: 0.73rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--fade);
+    margin-bottom: 24px;
+  }
+
+  .api-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-family: 'Crimson Pro', serif;
+    font-style: normal;
+  }
+
+  .api-status.live {
+    background: rgba(50,180,80,0.1);
+    border: 1px solid rgba(50,180,80,0.25);
+    color: #6ECF80;
+  }
+
+  .api-status.demo {
+    background: rgba(196,98,26,0.1);
+    border: 1px solid rgba(196,98,26,0.25);
+    color: var(--ember);
+  }
+
+  .status-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  .rotating-q {
+    min-height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 20px;
+  }
+
+  .rotating-q p {
+    font-style: italic;
+    color: #C4A870;
+    font-size: 1.05rem;
+    opacity: 0;
+    animation: qFade 4s ease-in-out infinite;
+    position: absolute;
+  }
+
+  .section-label {
+    font-size: 0.68rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--dim);
+    margin-bottom: 14px;
+  }
+
+  .theme-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 40px; }
+
+  .theme-card {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 18px 20px;
+    background: var(--char);
+    border: 1px solid var(--smoke);
+    border-radius: 9px;
+    cursor: pointer;
+    text-align: left;
+    color: var(--bone);
+    font-family: 'Crimson Pro', serif;
+    font-size: 1.05rem;
+    transition: all 0.22s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .theme-card::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+    background: var(--tc, var(--ember));
+    transform: scaleY(0);
+    transition: transform 0.22s;
+    transform-origin: bottom;
+  }
+
+  .theme-card:hover {
+    border-color: var(--tc, var(--ember));
+    background: #181410;
+    transform: translateX(4px);
+  }
+
+  .theme-card:hover::before { transform: scaleY(1); }
+
+  .theme-icon { font-size: 1.5rem; flex-shrink: 0; }
+  .theme-name { flex: 1; font-weight: 400; }
+  .theme-desc { font-size: 0.8rem; color: var(--fade); display: block; margin-top: 2px; }
+  .theme-arrow { color: var(--dim); font-size: 1rem; transition: transform 0.2s; }
+  .theme-card:hover .theme-arrow { transform: translateX(3px); color: var(--ash); }
+
+  .home-footer {
+    text-align: center;
+    margin-top: 48px;
+  }
+
+  .change-key {
+    background: none;
+    border: none;
+    color: var(--dim);
+    cursor: pointer;
+    font-family: 'Crimson Pro', serif;
+    font-size: 0.8rem;
+    font-style: italic;
+    text-decoration: underline;
+    text-decoration-color: var(--smoke);
+    transition: color 0.2s;
+  }
+
+  .change-key:hover { color: var(--fade); }
+
+  /* ─── CHAT SCREEN ───────────────────────────────── */
+  #chat-screen {
+    height: 100vh;
+    flex-direction: column;
+    animation: fadeUp 0.3s ease-out;
+  }
+
+  .chat-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 15px 20px;
+    border-bottom: 1px solid var(--smoke);
+    background: var(--coal);
+    flex-shrink: 0;
+    position: relative;
+    z-index: 2;
+  }
+
+  .chat-back {
+    background: none;
+    border: none;
+    color: var(--fade);
+    cursor: pointer;
+    font-family: 'Crimson Pro', serif;
+    font-size: 1.1rem;
+    padding: 4px 8px 4px 0;
+    flex-shrink: 0;
+    transition: color 0.2s;
+  }
+
+  .chat-back:hover { color: var(--ash); }
+
+  .chat-header-info { flex: 1; }
+
+  .chat-header-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    color: var(--bone);
+    font-weight: 400;
+  }
+
+  .chat-header-sub {
+    font-size: 0.72rem;
+    color: var(--fade);
+    letter-spacing: 0.04em;
+  }
+
+  .chat-reset {
+    background: none;
+    border: 1px solid var(--smoke);
+    border-radius: 5px;
+    color: var(--dim);
+    cursor: pointer;
+    font-family: 'Crimson Pro', serif;
+    font-size: 0.75rem;
+    padding: 5px 11px;
+    transition: all 0.2s;
+    flex-shrink: 0;
+  }
+
+  .chat-reset:hover { border-color: var(--dim); color: var(--fade); }
+
+  .messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 28px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    max-width: 700px;
+    width: 100%;
+    margin: 0 auto;
+    align-self: center;
+  }
+
+  .empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 32px 0 16px;
+    gap: 8px;
+  }
+
+  .empty-icon { font-size: 36px; margin-bottom: 8px; }
+
+  .empty-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem;
+    color: #C4A870;
+    font-style: italic;
+    font-weight: 400;
+  }
+
+  .empty-desc {
+    font-size: 0.85rem;
+    color: var(--fade);
+    max-width: 300px;
+    line-height: 1.6;
+    margin-bottom: 20px;
+  }
+
+  .spark-list {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+    width: 100%;
+    max-width: 480px;
+  }
+
+  .spark-btn {
+    padding: 11px 16px;
+    background: var(--char);
+    border: 1px solid var(--smoke);
+    border-radius: 7px;
+    color: var(--ash);
+    font-family: 'Crimson Pro', serif;
+    font-size: 0.92rem;
+    font-style: italic;
+    cursor: pointer;
+    text-align: left;
+    line-height: 1.4;
+    transition: all 0.2s;
+  }
+
+  .spark-btn:hover {
+    border-color: var(--dim);
+    color: var(--bone);
+    background: var(--cinder);
+  }
+
+  .bubble {
+    max-width: 82%;
+    border-radius: 10px;
+    padding: 14px 18px;
+    line-height: 1.65;
+    animation: bubbleIn 0.3s ease-out;
+  }
+
+  .bubble-user {
+    align-self: flex-end;
+    background: var(--cinder);
+    border: 1px solid var(--smoke);
+    border-bottom-right-radius: 2px;
+  }
+
+  .bubble-ai {
+    align-self: flex-start;
+    background: var(--char);
+    border: 1px solid #1E1A14;
+    border-bottom-left-radius: 2px;
+  }
+
+  .bubble-label {
+    font-size: 0.64rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 7px;
+    font-style: normal;
+    font-family: 'Crimson Pro', serif;
+  }
+
+  .bubble-text {
+    font-size: 1rem;
+    color: #E0D8C6;
+    white-space: pre-wrap;
+  }
+
+  .typing-dots {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+    padding: 4px 0;
+  }
+
+  .typing-dots span {
+    width: 7px;
+    height: 7px;
+    background: var(--dim);
+    border-radius: 50%;
+    display: inline-block;
+    animation: dotPulse 1.3s ease-in-out infinite;
+  }
+
+  .typing-dots span:nth-child(2) { animation-delay: 0.18s; }
+  .typing-dots span:nth-child(3) { animation-delay: 0.36s; }
+
+  .demo-notice {
+    align-self: center;
+    background: rgba(196,98,26,0.08);
+    border: 1px solid rgba(196,98,26,0.2);
+    border-radius: 6px;
+    padding: 10px 16px;
+    font-size: 0.82rem;
+    color: var(--ember);
+    text-align: center;
+    font-style: italic;
+    max-width: 360px;
+    line-height: 1.5;
+  }
+
+  .input-area {
+    display: flex;
+    gap: 10px;
+    padding: 14px 16px;
+    border-top: 1px solid var(--smoke);
+    background: var(--coal);
+    flex-shrink: 0;
+    align-items: flex-end;
+    max-width: 700px;
+    width: 100%;
+    margin: 0 auto;
+    align-self: center;
+  }
+
+  .msg-input {
+    flex: 1;
+    background: var(--char);
+    border: 1px solid var(--smoke);
+    border-radius: 8px;
+    padding: 12px 14px;
+    color: var(--bone);
+    font-family: 'Crimson Pro', serif;
+    font-size: 1rem;
+    resize: none;
+    outline: none;
+    line-height: 1.5;
+    max-height: 120px;
+    overflow-y: auto;
+    transition: border-color 0.2s;
+  }
+
+  .msg-input:focus { border-color: var(--dim); }
+  .msg-input::placeholder { color: var(--dim); font-style: italic; }
+
+  .send-btn {
+    width: 46px;
+    height: 46px;
+    border-radius: 8px;
+    border: none;
+    background: var(--ember);
+    color: var(--bone);
+    font-size: 1.3rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.2s;
+  }
+
+  .send-btn:hover:not(:disabled) { background: #D4721A; }
+  .send-btn:disabled { background: var(--smoke); cursor: not-allowed; opacity: 0.5; }
+
+  /* ─── ANIMATIONS ────────────────────────────────── */
+  @keyframes flicker {
+    0% { transform: scale(1) rotate(-1deg); filter: brightness(1); }
+    100% { transform: scale(1.07) rotate(1.5deg); filter: brightness(1.15); }
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes bubbleIn {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes dotPulse {
+    0%, 80%, 100% { opacity: 0.2; transform: scale(0.8); }
+    40% { opacity: 1; transform: scale(1); }
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  @keyframes qFade {
+    0% { opacity: 0; transform: translateY(5px); }
+    10% { opacity: 1; transform: translateY(0); }
+    80% { opacity: 1; transform: translateY(0); }
+    100% { opacity: 0; transform: translateY(-4px); }
+  }
+
+  /* ─── SCROLLBAR ─────────────────────────────────── */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--smoke); border-radius: 2px; }
+
+  /* ─── MOBILE ────────────────────────────────────── */
+  @media (max-width: 480px) {
+    .entry-card { padding: 24px 20px; }
+    .bubble { max-width: 92%; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════
+     ENTRY SCREEN
+════════════════════════════════════════════ -->
+<div id="entry-screen" class="screen active">
+  <div class="entry-glow"></div>
+
+  <span class="entry-flame">🔥</span>
+  <h1 class="entry-title">The Fire Pit</h1>
+  <p class="entry-tagline">Real conversations · Honest questions · No easy answers</p>
+
+  <div class="entry-card">
+    <span class="entry-card-label">To get started</span>
+    <h3>Enter your API Key</h3>
+    <p>Connect your Anthropic API key to enable live AI conversation. Your key stays in your browser and is never stored or sent anywhere except directly to Anthropic.</p>
+
+    <div class="api-input-wrap">
+      <input
+        type="password"
+        id="api-key-input"
+        class="api-input"
+        placeholder="sk-ant-..."
+        autocomplete="off"
+        spellcheck="false"
+      >
+      <button class="toggle-vis" id="toggle-vis" title="Show/hide key">👁</button>
+    </div>
+
+    <button class="btn-primary" id="connect-btn" onclick="connectWithKey()">
+      Enter the Fire Pit →
+    </button>
+
+    <div class="entry-divider"><span>or</span></div>
+
+    <button class="btn-ghost" onclick="skipKey()">
+      Continue without a key — explore in demo mode
+    </button>
+
+    <p class="entry-note">
+      No key? Get one at <strong>console.anthropic.com</strong><br>
+      In demo mode, responses are curated examples — not live AI.
+    </p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     HOME SCREEN
+════════════════════════════════════════════ -->
+<div id="home-screen" class="screen">
+  <div class="home-inner">
+    <div class="home-header">
+      <span class="home-flame">🔥</span>
+      <h1 class="home-title">The Fire Pit</h1>
+      <p class="home-sub">Mentor Companion</p>
+      <div id="api-status-badge"></div>
+
+      <div class="rotating-q" id="rotating-q"></div>
+    </div>
+
+    <div class="section-label">Choose your arena</div>
+    <div class="theme-list" id="theme-list"></div>
+
+    <div class="home-footer">
+      <button class="change-key" onclick="showEntry()">Change API key or mode</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     CHAT SCREEN
+════════════════════════════════════════════ -->
+<div id="chat-screen" class="screen">
+  <div class="chat-header" id="chat-header">
+    <button class="chat-back" onclick="goHome()">← Back</button>
+    <div class="chat-header-info">
+      <div class="chat-header-title" id="chat-title"></div>
+      <div class="chat-header-sub" id="chat-sub"></div>
+    </div>
+    <button class="chat-reset" onclick="resetChat()">New thread</button>
+  </div>
+
+  <div class="messages" id="messages"></div>
+
+  <div class="input-area">
+    <textarea
+      id="msg-input"
+      class="msg-input"
+      placeholder="Say what you're actually thinking..."
+      rows="1"
+      onkeydown="handleKey(event)"
+      oninput="autoResize(this)"
+    ></textarea>
+    <button class="send-btn" id="send-btn" onclick="sendMessage()" disabled>↑</button>
+  </div>
+</div>
+
+<script>
+// ─── STATE ───────────────────────────────────────────
+let apiKey = null;
+let isDemoMode = false;
+let activeTheme = null;
+let chatHistory = [];
+let isLoading = false;
+
+// ─── THEMES ──────────────────────────────────────────
+const THEMES = {
+  resilience: {
+    label: "Resilience & Grit",
+    desc: "Failure, discomfort, and what it teaches you",
+    icon: "⚡",
+    color: "#C4621A",
+    system: `You are a grounded, honest mentor in your mid-50s who has navigated real life — career, family, loss, success. You're speaking with young adults (early 20s) about resilience and grit. Your style is direct but warm — like a trusted older friend by a fire, not a therapist or corporate coach. Ask one powerful follow-up question after engaging with their answer. Challenge comfort zones gently but honestly. Reference real-world examples, not abstract advice. Keep responses to 3-4 sentences unless depth is clearly needed.`,
+    sparks: [
+      "What's the hardest thing you've faced this year — and what did it teach you?",
+      "Where in your life are you avoiding discomfort that might actually be growth?",
+      "Tell me about a time you failed. What would you do differently now?",
+      "What would your life look like in 5 years if you kept on your current path?",
+    ],
+    demos: [
+      "That's a real question worth sitting with. Most people avoid naming the hard thing — so the fact you can articulate it tells me something. Here's what I'd push on: was the lesson actually learned, or just acknowledged? There's a big gap between those two. What's one concrete thing you've done differently since?",
+      "Discomfort is information. The places we resist hardest are usually exactly where the growth is waiting. I've watched people spend entire decades sidestepping one conversation, one risk, one honest look in the mirror. What's the thing you keep almost doing?",
+    ]
+  },
+  purpose: {
+    label: "Purpose & Direction",
+    desc: "What to do with your life, actually",
+    icon: "🧭",
+    color: "#2D6A4F",
+    system: `You are a wise, grounded mentor talking with young adults about purpose and direction in life. You believe purpose is built through action, not discovered through thinking alone. Be honest about the uncertainty of modern life — no pretending it's simple. Draw on practical wisdom: careers, meaning, relationships, contribution. Ask one penetrating follow-up. Responses should be 3-4 sentences, conversational and direct.`,
+    sparks: [
+      "What are you actually good at — not what you wish you were good at?",
+      "If money wasn't the question, what problem in the world would you spend your life solving?",
+      "Who do you want to be at 40? What does that person do every day?",
+      "What are you tolerating in your life that you shouldn't be?",
+    ],
+    demos: [
+      "Here's the thing nobody tells you about purpose: you don't find it, you build it. It emerges from showing up consistently to things that matter — even before they feel meaningful. Most people wait for clarity before committing, but clarity comes from commitment, not the other way around. What's something you keep coming back to even when it's inconvenient?",
+      "That's worth taking seriously. The gap between who you want to be and what you're actually doing each day — that gap is the work. Not in a punishing way, but as honest information. What would have to change about your average Tuesday for it to belong to the person you described?",
+    ]
+  },
+  masculinity: {
+    label: "Modern Manhood",
+    desc: "Strength, responsibility, and what it means to be a good man",
+    icon: "🔥",
+    color: "#8B1E3F",
+    system: `You are a thoughtful, experienced man in your 50s mentoring young men about what it means to be a good man today. You hold traditional values around responsibility, integrity, and strength — but you're not dogmatic. You think critically about modern masculinity culture (online influencers, etc.) and offer nuanced alternatives. You're real about your own failures as a father, partner, and man. Honest, not preachy. Ask one challenging follow-up question. Keep responses direct, 3-4 sentences.`,
+    sparks: [
+      "What does being a good man mean to you — and where did that idea come from?",
+      "How do you balance strength with vulnerability? Do you get that right?",
+      "What do you owe the people in your life? How well are you delivering?",
+      "Where do you think modern men are getting it wrong?",
+    ],
+    demos: [
+      "That's a question worth taking seriously — and the fact that you're asking it is already something. Most of the noise online about masculinity is either rage-bait or so soft it's meaningless. What I've learned: being a good man is mostly about being reliable. Showing up when it's boring, when it costs you something, when nobody's watching. Who in your life is depending on you right now — and are you actually there?",
+      "I've gotten that balance wrong more times than I'd like to admit. Early on I confused silence with strength and missed things I can't get back. Real strength includes the capacity to say what's true and to receive truth back. What would it look like for you to be stronger in that direction?",
+    ]
+  },
+  ideas: {
+    label: "Big Ideas & Beliefs",
+    desc: "Socratic challenge of what you think is true",
+    icon: "💡",
+    color: "#5B4A8B",
+    system: `You are an intellectually curious mentor who loves exploring ideas, philosophy, and beliefs with young people. You Socratically challenge ideas — including your own — without being combative or condescending. You're genuinely curious, not trying to win arguments. You hold your own views loosely. You reference philosophy, history, and real-world examples naturally, not academically. After engaging, ask one sharp follow-up question that goes deeper. Responses: 3-4 sentences, conversational.`,
+    sparks: [
+      "What belief do you hold that most people around you would disagree with?",
+      "What idea are you most afraid to be wrong about?",
+      "How do you decide what's actually true vs what you've been told to believe?",
+      "What's something you've completely changed your mind on in the last few years?",
+    ],
+    demos: [
+      "That's a genuinely interesting position — and the fact that it makes you uncomfortable to say is worth noting. Most of our strongest convictions are ones we've never really had to defend. Socrates would say that's where philosophy begins. Here's my real question: if you found out tomorrow that you were completely wrong about this — what would that cost you, and could you live with it?",
+      "Changing your mind is underrated. Most people treat it as weakness when it's actually the mark of someone who takes ideas seriously. The question I'd push on: what was the actual moment you shifted — was it new evidence, or a new experience that the evidence finally made sense of?",
+    ]
+  },
+  challenge: {
+    label: "Challenge the Mentor",
+    desc: "Put the older generation on the hot seat",
+    icon: "⚔️",
+    color: "#4A3728",
+    system: `You are a 55-year-old father and mentor who is being genuinely challenged by young adults. Your role here is to be HONEST and humble — acknowledge where older generations got things wrong. Don't be defensive. Sit with criticism. Engage with it seriously. Concede real points. Push back only when you have genuine substance. This is the most important mode — model what it looks like to hold your views with openness. Ask one question that invites them to go further. Responses: direct, 3-4 sentences, genuinely reflective.`,
+    sparks: [
+      "What do you think the older generation fundamentally gets wrong about us?",
+      "Is the advice you'd give us actually relevant in 2026?",
+      "What privileges did you have that made your path easier than ours?",
+      "Where do you think you've failed as a mentor or role model?",
+    ],
+    demos: [
+      "That's fair, and I want to sit with it rather than deflect. You're right that a lot of the conventional path I followed was built on conditions that no longer exist — cheaper housing, more stable employment, less information overload. I don't think I can hand you a map because the terrain genuinely changed. But I'm curious: what would useful guidance from someone my age actually look like to you?",
+      "Honestly — yes. There are places I've failed, and I think about them. The question is whether I learned enough from them to be worth anything to you now. I don't want to be the person who gets defensive when they're questioned. What's the thing you actually needed that you didn't get?",
+    ]
+  }
+};
+
+const ROTATING_QUESTIONS = [
+  "What's actually on your mind lately?",
+  "What are you wrestling with?",
+  "What do you wish someone would ask you about?",
+  "What's the most honest thing you could say right now?",
+  "Where are you holding back?",
+];
+
+// ─── ENTRY SCREEN ────────────────────────────────────
+document.getElementById('toggle-vis').addEventListener('click', () => {
+  const input = document.getElementById('api-key-input');
+  const btn = document.getElementById('toggle-vis');
+  if (input.type === 'password') {
+    input.type = 'text';
+    btn.textContent = '🙈';
+  } else {
+    input.type = 'password';
+    btn.textContent = '👁';
+  }
+});
+
+document.getElementById('api-key-input').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') connectWithKey();
+});
+
+function connectWithKey() {
+  const val = document.getElementById('api-key-input').value.trim();
+  if (!val) {
+    document.getElementById('api-key-input').style.borderColor = '#8B1E3F';
+    setTimeout(() => document.getElementById('api-key-input').style.borderColor = '', 1200);
+    return;
+  }
+  apiKey = val;
+  isDemoMode = false;
+  showHome();
+}
+
+function skipKey() {
+  apiKey = null;
+  isDemoMode = true;
+  showHome();
+}
+
+function showEntry() {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('entry-screen').classList.add('active');
+}
+
+// ─── HOME SCREEN ─────────────────────────────────────
+function showHome() {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('home-screen').classList.add('active');
+  renderHome();
+}
+
+function renderHome() {
+  // Status badge
+  const badge = document.getElementById('api-status-badge');
+  if (isDemoMode) {
+    badge.innerHTML = `<span class="api-status demo"><span class="status-dot"></span>Demo mode — no API key</span>`;
+  } else {
+    badge.innerHTML = `<span class="api-status live"><span class="status-dot"></span>Live AI connected</span>`;
+  }
+
+  // Rotating questions
+  const rq = document.getElementById('rotating-q');
+  let qi = 0;
+  rq.innerHTML = '';
+  const qEl = document.createElement('p');
+  qEl.textContent = `"${ROTATING_QUESTIONS[0]}"`;
+  rq.appendChild(qEl);
+
+  clearInterval(window._rqInterval);
+  window._rqInterval = setInterval(() => {
+    qi = (qi + 1) % ROTATING_QUESTIONS.length;
+    const el = document.createElement('p');
+    el.textContent = `"${ROTATING_QUESTIONS[qi]}"`;
+    el.style.animation = 'qFade 4s ease-in-out';
+    rq.innerHTML = '';
+    rq.appendChild(el);
+  }, 4000);
+
+  // Theme list
+  const list = document.getElementById('theme-list');
+  list.innerHTML = '';
+  Object.entries(THEMES).forEach(([key, theme]) => {
+    const card = document.createElement('button');
+    card.className = 'theme-card';
+    card.style.setProperty('--tc', theme.color);
+    card.innerHTML = `
+      <span class="theme-icon">${theme.icon}</span>
+      <span style="flex:1">
+        <span class="theme-name">${theme.label}</span>
+        <span class="theme-desc">${theme.desc}</span>
+      </span>
+      <span class="theme-arrow">→</span>
+    `;
+    card.onclick = () => openChat(key);
+    list.appendChild(card);
+  });
+}
+
+// ─── CHAT SCREEN ─────────────────────────────────────
+function openChat(themeKey) {
+  activeTheme = themeKey;
+  chatHistory = [];
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('chat-screen').classList.add('active');
+  renderChatHeader();
+  renderEmpty();
+  document.getElementById('msg-input').focus();
+}
+
+function renderChatHeader() {
+  const t = THEMES[activeTheme];
+  document.getElementById('chat-title').textContent = `${t.icon}  ${t.label}`;
+  document.getElementById('chat-sub').textContent = t.desc;
+  document.getElementById('chat-header').style.borderBottomColor = t.color + '44';
+}
+
+function renderEmpty() {
+  const t = THEMES[activeTheme];
+  const msgs = document.getElementById('messages');
+  msgs.innerHTML = `
+    <div class="empty-state">
+      <div class="empty-icon">${t.icon}</div>
+      <div class="empty-title">Start the conversation</div>
+      <div class="empty-desc">Ask anything. Challenge anything. Say what's actually on your mind.</div>
+      ${isDemoMode ? `<div class="demo-notice">Demo mode: responses are curated examples, not live AI.<br>Add an API key to unlock full conversation.</div>` : ''}
+      <div class="spark-list">
+        ${t.sparks.map(s => `<button class="spark-btn" onclick="sendSpark(this.textContent)">${s}</button>`).join('')}
+      </div>
+    </div>
+  `;
+}
+
+function goHome() {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('home-screen').classList.add('active');
+}
+
+function resetChat() {
+  chatHistory = [];
+  renderEmpty();
+  document.getElementById('msg-input').value = '';
+  updateSendBtn();
+}
+
+// ─── MESSAGING ───────────────────────────────────────
+function sendSpark(text) {
+  document.getElementById('msg-input').value = text;
+  sendMessage();
+}
+
+async function sendMessage() {
+  const input = document.getElementById('msg-input');
+  const text = input.value.trim();
+  if (!text || isLoading) return;
+
+  input.value = '';
+  input.style.height = '';
+  updateSendBtn();
+
+  const msgs = document.getElementById('messages');
+
+  // Clear empty state
+  const emptyState = msgs.querySelector('.empty-state');
+  if (emptyState) emptyState.remove();
+
+  // Add user bubble
+  appendBubble('user', text, msgs);
+  chatHistory.push({ role: 'user', content: text });
+
+  // Add typing indicator
+  const typingId = 'typing-' + Date.now();
+  msgs.innerHTML += `
+    <div class="bubble bubble-ai" id="${typingId}">
+      <div class="typing-dots"><span></span><span></span><span></span></div>
+    </div>
+  `;
+  msgs.scrollTop = msgs.scrollHeight;
+
+  isLoading = true;
+  updateSendBtn();
+
+  let reply;
+
+  if (isDemoMode) {
+    await new Promise(r => setTimeout(r, 1200 + Math.random() * 800));
+    const demos = THEMES[activeTheme].demos;
+    reply = demos[Math.floor(Math.random() * demos.length)];
+  } else {
+    try {
+      const res = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': apiKey,
+          'anthropic-version': '2023-06-01',
+          'anthropic-dangerous-direct-browser-access': 'true'
+        },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-20250514',
+          max_tokens: 1000,
+          system: THEMES[activeTheme].system,
+          messages: chatHistory
+        })
+      });
+      const data = await res.json();
+      if (data.error) {
+        reply = `⚠️ API error: ${data.error.message}`;
+      } else {
+        reply = data.content?.[0]?.text || 'Something went wrong — try again.';
+      }
+    } catch (err) {
+      reply = `⚠️ Could not reach the API. Check your key and connection.`;
+    }
+  }
+
+  // Remove typing indicator
+  document.getElementById(typingId)?.remove();
+
+  // Add AI bubble
+  appendBubble('ai', reply, msgs);
+  chatHistory.push({ role: 'assistant', content: reply });
+
+  isLoading = false;
+  updateSendBtn();
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function appendBubble(role, text, container) {
+  const div = document.createElement('div');
+  div.className = `bubble bubble-${role}`;
+
+  if (role === 'ai') {
+    const label = document.createElement('div');
+    label.className = 'bubble-label';
+    label.style.color = THEMES[activeTheme].color;
+    label.textContent = 'Mentor';
+    div.appendChild(label);
+  }
+
+  const p = document.createElement('div');
+  p.className = 'bubble-text';
+  p.textContent = text;
+  div.appendChild(p);
+
+  container.appendChild(div);
+  container.scrollTop = container.scrollHeight;
+}
+
+// ─── UTILITIES ───────────────────────────────────────
+function handleKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    sendMessage();
+  }
+}
+
+function autoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 120) + 'px';
+  updateSendBtn();
+}
+
+function updateSendBtn() {
+  const val = document.getElementById('msg-input').value.trim();
+  document.getElementById('send-btn').disabled = !val || isLoading;
+}
+
+document.getElementById('msg-input').addEventListener('input', updateSendBtn);
+</script>
+</body>
+</html>
