@@ -1158,6 +1158,7 @@ body::after{
       <input type="file" id="import-file" accept=".json" style="display:none" onchange="importJSON(event)">
       <button class="cmd-btn" onclick="exportWord()">⬇ WORD</button>
       <button class="cmd-btn" onclick="exportPDF()">⎙ PDF</button>
+      <button class="cmd-btn danger" onclick="confirmReset()" title="Reset all mission data">↺ RESET</button>
       <div class="profile-chip" onclick="openProfile()">
         <div class="profile-avatar" id="avatar-cmd">?</div>
         <span class="profile-chip-name" id="cmd-name">OPERATIVE</span>
@@ -2585,6 +2586,89 @@ function autoResizeTextareas(parent) {
    BOOT
 ═══════════════════════════════════════ */
 init();
+</script>
+
+<!-- ═══════════════════════════════════════
+     RESET MODAL
+════════════════════════════════════════ -->
+<div id="reset-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:700;align-items:center;justify-content:center;backdrop-filter:blur(4px);">
+  <div style="background:var(--panel);border:1px solid var(--border2);width:min(500px,94vw);clip-path:polygon(0 0,calc(100% - 20px) 0,100% 20px,100% 100%,20px 100%,0 calc(100% - 20px));box-shadow:0 0 60px rgba(0,0,0,.8),0 0 30px rgba(255,59,92,0.1);position:relative;animation:authIn .2s ease both;">
+    <div class="hex-corner tl" style="border-color:var(--red);"></div>
+    <div class="hex-corner br" style="border-color:var(--red);"></div>
+
+    <!-- Header -->
+    <div style="padding:24px 28px 20px;border-bottom:1px solid var(--border);background:rgba(255,59,92,0.06);">
+      <div style="font-family:var(--font-mono);font-size:.6rem;letter-spacing:.25em;text-transform:uppercase;color:var(--red);margin-bottom:8px;">⚠ MISSION RESET</div>
+      <div style="font-family:var(--font-head);font-size:1rem;font-weight:700;letter-spacing:.08em;color:var(--white);">↺ Reset Ambition Protocol</div>
+      <div style="font-family:var(--font-mono);font-size:.68rem;color:var(--text-dim);margin-top:6px;line-height:1.5;">This will permanently clear all ambitions, intentions, actions, and Grogu commentary. This action cannot be undone.</div>
+    </div>
+
+    <!-- Options -->
+    <div style="padding:20px 28px;display:flex;flex-direction:column;gap:8px;">
+      <div style="font-family:var(--font-mono);font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;color:var(--text-dim);margin-bottom:4px;">// SAVE MISSION DATA BEFORE RESET?</div>
+
+      <button onclick="resetAfterBackup()" style="display:flex;align-items:center;gap:14px;padding:12px 16px;background:var(--surface);border:1px solid var(--border2);color:var(--text);font-family:var(--font-body);font-size:.84rem;cursor:pointer;text-align:left;transition:border-color .15s;" onmouseover="this.style.borderColor='var(--cyan-dim)'" onmouseout="this.style.borderColor='var(--border2)'">
+        <span style="font-size:1.2rem;flex-shrink:0;color:var(--cyan);">↓</span>
+        <div><div style="font-weight:600;color:var(--white);">Back up then reset</div><div style="font-size:.72rem;color:var(--text-dim);margin-top:2px;">Downloads JSON backup, then clears all mission data</div></div>
+      </button>
+
+      <button onclick="resetAfterPDF()" style="display:flex;align-items:center;gap:14px;padding:12px 16px;background:var(--surface);border:1px solid var(--border2);color:var(--text);font-family:var(--font-body);font-size:.84rem;cursor:pointer;text-align:left;transition:border-color .15s;" onmouseover="this.style.borderColor='var(--cyan-dim)'" onmouseout="this.style.borderColor='var(--border2)'">
+        <span style="font-size:1.2rem;flex-shrink:0;color:var(--cyan);">⎙</span>
+        <div><div style="font-weight:600;color:var(--white);">Export PDF then reset</div><div style="font-size:.72rem;color:var(--text-dim);margin-top:2px;">Opens print/PDF dialog, then clears all mission data</div></div>
+      </button>
+
+      <button onclick="resetAfterWord()" style="display:flex;align-items:center;gap:14px;padding:12px 16px;background:var(--surface);border:1px solid var(--border2);color:var(--text);font-family:var(--font-body);font-size:.84rem;cursor:pointer;text-align:left;transition:border-color .15s;" onmouseover="this.style.borderColor='var(--cyan-dim)'" onmouseout="this.style.borderColor='var(--border2)'">
+        <span style="font-size:1.2rem;flex-shrink:0;color:var(--cyan);">⬇</span>
+        <div><div style="font-weight:600;color:var(--white);">Export Word then reset</div><div style="font-size:.72rem;color:var(--text-dim);margin-top:2px;">Downloads .docx file, then clears all mission data</div></div>
+      </button>
+
+      <div style="height:1px;background:var(--border);margin:4px 0;"></div>
+
+      <button onclick="executeReset()" style="display:flex;align-items:center;gap:14px;padding:12px 16px;background:rgba(255,59,92,0.1);border:1px solid var(--red-dim);color:var(--red);font-family:var(--font-body);font-size:.84rem;cursor:pointer;text-align:left;transition:all .15s;" onmouseover="this.style.background='rgba(255,59,92,0.2)'" onmouseout="this.style.background='rgba(255,59,92,0.1)'">
+        <span style="font-size:1.2rem;flex-shrink:0;">↺</span>
+        <div><div style="font-weight:600;">Reset without saving</div><div style="font-size:.72rem;opacity:.8;margin-top:2px;">Immediately clears all data — cannot be undone</div></div>
+      </button>
+    </div>
+
+    <!-- Footer -->
+    <div style="padding:16px 28px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;">
+      <button onclick="closeResetModal()" class="nav-btn secondary" style="padding:8px 20px;font-size:.65rem;">CANCEL — KEEP DATA</button>
+    </div>
+  </div>
+</div>
+
+<script>
+function confirmReset() {
+  document.getElementById('reset-modal').style.display = 'flex';
+}
+function closeResetModal() {
+  document.getElementById('reset-modal').style.display = 'none';
+}
+function executeReset() {
+  closeResetModal();
+  state = { profile: state.profile, ambitions: [], intentions: [], actions: [], groguCommentary: [] };
+  save();
+  goStep(1, document.getElementById('tab-1'));
+  renderAmbitions();
+  renderIntentions();
+  renderActions();
+  addAmbition();
+  showToast('↺ Mission reset. Protocol restarting.');
+}
+function resetAfterBackup() {
+  closeResetModal();
+  exportJSON();
+  setTimeout(executeReset, 700);
+}
+function resetAfterPDF() {
+  exportPDF();
+  setTimeout(() => { closeResetModal(); executeReset(); }, 900);
+}
+function resetAfterWord() {
+  closeResetModal();
+  exportWord();
+  setTimeout(executeReset, 2500);
+}
 </script>
 </body>
 </html>
