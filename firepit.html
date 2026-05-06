@@ -692,7 +692,91 @@
     100% { opacity: 0; transform: translateY(-4px); }
   }
 
-  /* ─── SCROLLBAR ─────────────────────────────────── */
+  .chat-action-btn {
+    background: none;
+    border: 1px solid var(--smoke);
+    border-radius: 5px;
+    color: var(--ash);
+    cursor: pointer;
+    font-family: 'Crimson Pro', serif;
+    font-size: 0.75rem;
+    padding: 5px 11px;
+    transition: all 0.2s;
+    flex-shrink: 0;
+    white-space: nowrap;
+  }
+  .chat-action-btn:hover { border-color: var(--ember); color: var(--bone); }
+
+  /* ─── SHARE MODAL ───────────────────────────────── */
+  .modal-backdrop {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.75);
+    z-index: 100;
+    display: flex; align-items: flex-end; justify-content: center;
+    animation: fadeIn 0.2s ease;
+  }
+  .modal {
+    background: var(--char);
+    border: 1px solid var(--smoke);
+    border-radius: 16px 16px 0 0;
+    padding: 28px 24px 40px;
+    width: 100%; max-width: 560px;
+    animation: slideUp 0.3s ease;
+  }
+  .modal-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    color: var(--bone);
+    margin-bottom: 6px;
+    font-weight: 400;
+  }
+  .modal-sub {
+    font-size: 0.82rem;
+    color: var(--fade);
+    font-style: italic;
+    margin-bottom: 18px;
+  }
+  .summary-box {
+    background: var(--cinder);
+    border: 1px solid var(--smoke);
+    border-radius: 8px;
+    padding: 16px;
+    font-size: 0.92rem;
+    color: #D0C8B6;
+    line-height: 1.7;
+    max-height: 240px;
+    overflow-y: auto;
+    margin-bottom: 20px;
+    white-space: pre-wrap;
+  }
+  .modal-actions { display: flex; gap: 10px; }
+  .modal-btn-share {
+    flex: 1; padding: 13px;
+    background: var(--ember); border: none; border-radius: 7px;
+    color: var(--bone); font-family: 'Playfair Display', serif;
+    font-size: 0.95rem; cursor: pointer; transition: all 0.2s;
+  }
+  .modal-btn-share:hover { background: #D4721A; }
+  .modal-btn-copy {
+    padding: 13px 16px;
+    background: transparent; border: 1px solid var(--smoke); border-radius: 7px;
+    color: var(--fade); font-family: 'Crimson Pro', serif;
+    font-size: 0.88rem; cursor: pointer; transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .modal-btn-copy:hover { border-color: var(--dim); color: var(--ash); }
+  .modal-close {
+    position: absolute; top: 16px; right: 20px;
+    background: none; border: none; color: var(--fade);
+    font-size: 1.2rem; cursor: pointer; padding: 4px;
+  }
+  .modal-loading {
+    text-align: center; padding: 32px 0;
+    color: var(--fade); font-style: italic; font-size: 0.92rem;
+  }
+  @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+  @keyframes slideUp { from { transform: translateY(40px); opacity:0; } to { transform: translateY(0); opacity:1; } }
+
   ::-webkit-scrollbar { width: 4px; }
   ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb { background: var(--smoke); border-radius: 2px; }
@@ -783,7 +867,10 @@
       <div class="chat-header-title" id="chat-title"></div>
       <div class="chat-header-sub" id="chat-sub"></div>
     </div>
-    <button class="chat-reset" onclick="resetChat()">New thread</button>
+    <div style="display:flex;gap:8px;flex-shrink:0">
+      <button class="chat-action-btn" id="share-btn" onclick="summariseAndShare()" title="Summarise &amp; Share" style="display:none">✉️ Share</button>
+      <button class="chat-reset" onclick="resetChat()">New thread</button>
+    </div>
   </div>
 
   <div class="messages" id="messages"></div>
@@ -877,6 +964,23 @@ const THEMES = {
     demos: [
       "That's a genuinely interesting position — and the fact that it makes you uncomfortable to say is worth noting. Most of our strongest convictions are ones we've never really had to defend. Socrates would say that's where philosophy begins. Here's my real question: if you found out tomorrow that you were completely wrong about this — what would that cost you, and could you live with it?",
       "Changing your mind is underrated. Most people treat it as weakness when it's actually the mark of someone who takes ideas seriously. The question I'd push on: what was the actual moment you shifted — was it new evidence, or a new experience that the evidence finally made sense of?",
+    ]
+  },
+  womanhood: {
+    label: "Modern Womanhood",
+    desc: "Identity, strength, and navigating life as a woman today",
+    icon: "🌙",
+    color: "#7B4F8E",
+    system: `You are a thoughtful, experienced mentor — warm, wise, and honest — speaking with young women in their early 20s about what it means to be a woman navigating the modern world. You respect their intelligence and don't patronise. You hold space for both traditional values around relationships, family, and community AND the very real pressures of ambition, independence, and identity that modern women face. You don't push an agenda — you ask questions that help them think for themselves. You're honest about the tensions: between what they want and what they're told to want, between strength and softness, between self-reliance and connection. Ask one genuine, penetrating follow-up question. Keep responses to 3-4 sentences, warm but direct.`,
+    sparks: [
+      "What does being a strong woman actually mean to you — and where did that idea come from?",
+      "What's something you feel pressure to want that you're not sure you actually want?",
+      "How do you balance ambition with the other things that matter to you — relationships, rest, joy?",
+      "What do you wish the people closest to you understood better about what you're navigating?",
+    ],
+    demos: [
+      "That's worth sitting with — because there's a difference between what we've been told strength looks like and what it actually feels like from the inside. A lot of women I know are exhausted from performing a version of strength that doesn't fit them. What does it feel like when you're genuinely strong, not just performing it?",
+      "That tension is real, and you're not alone in feeling it. The modern world hands young women a set of very loud, sometimes contradictory scripts — and figuring out which parts are actually yours is some of the most important work of your 20s. What's one expectation you've already let go of that you thought you were supposed to hold onto?",
     ]
   },
   challenge: {
@@ -1044,6 +1148,7 @@ function resetChat() {
   renderEmpty();
   document.getElementById('msg-input').value = '';
   updateSendBtn();
+  updateShareBtn();
 }
 
 // ─── MESSAGING ───────────────────────────────────────
@@ -1126,6 +1231,7 @@ async function sendMessage() {
 
   isLoading = false;
   updateSendBtn();
+  updateShareBtn();
   msgs.scrollTop = msgs.scrollHeight;
 }
 
@@ -1148,6 +1254,113 @@ function appendBubble(role, text, container) {
 
   container.appendChild(div);
   container.scrollTop = container.scrollHeight;
+}
+
+// ─── SUMMARY & SHARE ─────────────────────────────────
+function updateShareBtn() {
+  const btn = document.getElementById('share-btn');
+  if (btn) btn.style.display = chatHistory.length >= 2 ? 'block' : 'none';
+}
+
+async function summariseAndShare() {
+  if (chatHistory.length < 2) return;
+
+  // Build modal
+  const backdrop = document.createElement('div');
+  backdrop.className = 'modal-backdrop';
+  backdrop.innerHTML = `
+    <div class="modal" style="position:relative">
+      <button class="modal-close" onclick="this.closest('.modal-backdrop').remove()">✕</button>
+      <div class="modal-title">Conversation Summary</div>
+      <div class="modal-sub">Generating a summary you can share…</div>
+      <div class="summary-box modal-loading" id="summary-content">
+        <span class="typing-dots"><span></span><span></span><span></span></span>
+        Summarising your conversation…
+      </div>
+      <div class="modal-actions" id="modal-actions" style="display:none">
+        <button class="modal-btn-share" onclick="doShare()">📲 Share via WhatsApp / iMessage</button>
+        <button class="modal-btn-copy" onclick="doCopy()">Copy</button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(backdrop);
+  backdrop.addEventListener('click', (e) => { if (e.target === backdrop) backdrop.remove(); });
+
+  const theme = THEMES[activeTheme];
+  const summaryPrompt = `You are summarising a mentorship conversation for the young person who had it, so they can reflect on it later or share it with someone they trust.
+
+The conversation was in the arena: "${theme.label}" — ${theme.desc}
+
+Here is the conversation:
+${chatHistory.map(m => `${m.role === 'user' ? 'Them' : 'Mentor'}: ${m.content}`).join('\n\n')}
+
+Write a warm, personal summary (150-200 words) that:
+1. Captures the core theme or question they were exploring
+2. Notes any honest insights or shifts that came up
+3. Ends with one reflection question for them to sit with
+
+Write it addressed to the person (use "you"). No bullet points — flowing prose. Tone: like a letter from a trusted mentor after a good conversation.`;
+
+  let summaryText = '';
+
+  if (isDemoMode) {
+    await new Promise(r => setTimeout(r, 1500));
+    summaryText = `Tonight you explored something that a lot of people your age feel but rarely say out loud — the gap between who you're becoming and what the world expects of you. You were honest about where the pressure comes from, and that honesty matters.\n\nWhat came through clearly is that you already have more clarity than you give yourself credit for. The uncertainty you're sitting with isn't confusion — it's the natural discomfort of growing into something real.\n\nThe question to sit with: What's one small decision this week that would belong to the person you actually want to be?`;
+  } else {
+    try {
+      const res = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': apiKey,
+          'anthropic-version': '2023-06-01',
+          'anthropic-dangerous-direct-browser-access': 'true'
+        },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-6',
+          max_tokens: 500,
+          messages: [{ role: 'user', content: summaryPrompt }]
+        })
+      });
+      const data = await res.json();
+      summaryText = data.content?.[0]?.text || 'Could not generate summary.';
+    } catch {
+      summaryText = 'Could not generate summary — check your connection.';
+    }
+  }
+
+  window._currentSummary = `🔥 Fire Pit — ${theme.label}\n\n${summaryText}`;
+
+  const box = document.getElementById('summary-content');
+  if (box) {
+    box.classList.remove('modal-loading');
+    box.textContent = summaryText;
+  }
+  const actions = document.getElementById('modal-actions');
+  if (actions) actions.style.display = 'flex';
+}
+
+async function doShare() {
+  const text = window._currentSummary || '';
+  if (navigator.share) {
+    try {
+      await navigator.share({ text });
+    } catch (e) {
+      if (e.name !== 'AbortError') doCopy();
+    }
+  } else {
+    // Fallback: open WhatsApp web
+    const encoded = encodeURIComponent(text);
+    window.open(`https://wa.me/?text=${encoded}`, '_blank');
+  }
+}
+
+function doCopy() {
+  const text = window._currentSummary || '';
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.querySelector('.modal-btn-copy');
+    if (btn) { btn.textContent = '✓ Copied!'; setTimeout(() => btn.textContent = 'Copy', 1800); }
+  });
 }
 
 // ─── UTILITIES ───────────────────────────────────────
