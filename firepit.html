@@ -781,10 +781,216 @@
   ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb { background: var(--smoke); border-radius: 2px; }
 
+  /* ─── NAV TAB BAR ───────────────────────────────── */
+  .tab-bar {
+    display: flex;
+    border-bottom: 1px solid var(--smoke);
+    margin-bottom: 40px;
+    gap: 0;
+  }
+  .tab-btn {
+    flex: 1;
+    padding: 12px 8px;
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    color: var(--fade);
+    font-family: 'Crimson Pro', serif;
+    font-size: 0.78rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-bottom: -1px;
+  }
+  .tab-btn.active {
+    color: var(--bone);
+    border-bottom-color: var(--ember);
+  }
+  .tab-btn:hover:not(.active) { color: var(--ash); }
+
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; animation: fadeUp 0.3s ease-out; }
+
+  /* ─── SPARK LIBRARY ─────────────────────────────── */
+  .lib-intro {
+    text-align: center;
+    margin-bottom: 36px;
+    padding: 0 4px;
+  }
+  .lib-intro p {
+    font-size: 0.92rem;
+    color: var(--ash);
+    line-height: 1.7;
+    font-style: italic;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+
+  .lib-filter-row {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 28px;
+  }
+  .lib-filter {
+    padding: 6px 14px;
+    background: var(--char);
+    border: 1px solid var(--smoke);
+    border-radius: 20px;
+    color: var(--fade);
+    font-family: 'Crimson Pro', serif;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.18s;
+    letter-spacing: 0.04em;
+  }
+  .lib-filter.active {
+    background: var(--ember);
+    border-color: var(--ember);
+    color: var(--bone);
+  }
+  .lib-filter:hover:not(.active) { border-color: var(--dim); color: var(--ash); }
+
+  .lib-category { margin-bottom: 36px; }
+
+  .lib-cat-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+  .lib-cat-icon { font-size: 1.1rem; }
+  .lib-cat-label {
+    font-size: 0.68rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--dim);
+  }
+  .lib-cat-tag {
+    font-size: 0.62rem;
+    padding: 2px 8px;
+    border-radius: 10px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    border: 1px solid;
+    opacity: 0.7;
+  }
+  .lib-cat-tag.group { color: #6ECF80; border-color: #6ECF8050; background: rgba(110,207,128,0.07); }
+  .lib-cat-tag.solo { color: #A0C4FF; border-color: #A0C4FF50; background: rgba(160,196,255,0.07); }
+  .lib-cat-tag.both { color: var(--ember); border-color: var(--ember); background: rgba(196,98,26,0.07); opacity:0.9; }
+
+  .lib-questions { display: flex; flex-direction: column; gap: 8px; }
+
+  .lib-q {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px 16px;
+    background: var(--char);
+    border: 1px solid var(--smoke);
+    border-radius: 8px;
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.2s;
+    width: 100%;
+    position: relative;
+  }
+  .lib-q:hover {
+    border-color: var(--dim);
+    background: var(--cinder);
+    transform: translateX(3px);
+  }
+  .lib-q-text {
+    flex: 1;
+    font-family: 'Crimson Pro', serif;
+    font-size: 0.97rem;
+    color: var(--ash);
+    line-height: 1.5;
+    font-style: italic;
+    transition: color 0.2s;
+  }
+  .lib-q:hover .lib-q-text { color: var(--bone); }
+  .lib-q-action {
+    font-size: 0.7rem;
+    color: var(--dim);
+    white-space: nowrap;
+    padding-top: 2px;
+    transition: color 0.2s;
+    letter-spacing: 0.04em;
+  }
+  .lib-q:hover .lib-q-action { color: var(--ember); }
+
+  .lib-random-btn {
+    width: 100%;
+    padding: 14px;
+    margin-bottom: 32px;
+    background: transparent;
+    border: 1px dashed var(--smoke);
+    border-radius: 8px;
+    color: var(--fade);
+    font-family: 'Crimson Pro', serif;
+    font-size: 0.92rem;
+    font-style: italic;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.02em;
+  }
+  .lib-random-btn:hover {
+    border-color: var(--ember);
+    color: var(--bone);
+    background: rgba(196,98,26,0.05);
+  }
+
+  /* Question spotlight modal */
+  .spotlight-modal {
+    background: var(--char);
+    border: 1px solid var(--smoke);
+    border-radius: 16px 16px 0 0;
+    padding: 32px 24px 44px;
+    width: 100%; max-width: 560px;
+    animation: slideUp 0.3s ease;
+    position: relative;
+  }
+  .spotlight-q {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.15rem, 3.5vw, 1.4rem);
+    color: var(--bone);
+    line-height: 1.5;
+    margin-bottom: 24px;
+    font-style: italic;
+    font-weight: 400;
+  }
+  .spotlight-actions { display: flex; flex-direction: column; gap: 10px; }
+  .spotlight-btn-ai {
+    padding: 14px;
+    background: var(--ember); border: none; border-radius: 8px;
+    color: var(--bone); font-family: 'Playfair Display', serif;
+    font-size: 1rem; cursor: pointer; transition: all 0.2s;
+    text-align: center;
+  }
+  .spotlight-btn-ai:hover { background: #D4721A; }
+  .spotlight-btn-share {
+    padding: 12px;
+    background: transparent; border: 1px solid var(--smoke); border-radius: 8px;
+    color: var(--fade); font-family: 'Crimson Pro', serif;
+    font-size: 0.88rem; cursor: pointer; transition: all 0.2s;
+    text-align: center;
+  }
+  .spotlight-btn-share:hover { border-color: var(--dim); color: var(--ash); }
+  .spotlight-hint {
+    font-size: 0.78rem;
+    color: var(--dim);
+    text-align: center;
+    font-style: italic;
+    margin-top: 8px;
+  }
+
   /* ─── MOBILE ────────────────────────────────────── */
   @media (max-width: 480px) {
     .entry-card { padding: 24px 20px; }
     .bubble { max-width: 92%; }
+    .tab-btn { font-size: 0.7rem; padding: 10px 4px; }
   }
 </style>
 </head>
@@ -839,17 +1045,43 @@
 ════════════════════════════════════════════ -->
 <div id="home-screen" class="screen">
   <div class="home-inner">
+
+    <!-- Header -->
     <div class="home-header">
       <span class="home-flame">🔥</span>
       <h1 class="home-title">The Fire Pit</h1>
       <p class="home-sub">Mentor Companion</p>
       <div id="api-status-badge"></div>
-
       <div class="rotating-q" id="rotating-q"></div>
     </div>
 
-    <div class="section-label">Choose your arena</div>
-    <div class="theme-list" id="theme-list"></div>
+    <!-- Tab Bar -->
+    <div class="tab-bar">
+      <button class="tab-btn active" onclick="switchTab('arenas', this)">Arenas</button>
+      <button class="tab-btn" onclick="switchTab('sparks', this)">✨ Spark Library</button>
+    </div>
+
+    <!-- Tab: Arenas -->
+    <div class="tab-panel active" id="tab-arenas">
+      <div class="section-label">Choose your arena</div>
+      <div class="theme-list" id="theme-list"></div>
+    </div>
+
+    <!-- Tab: Spark Library -->
+    <div class="tab-panel" id="tab-sparks">
+      <div class="lib-intro">
+        <p>Questions to open up a room, start a real conversation, or hand to someone who's got something to say. Tap any question to explore it deeper with AI — or just read it out loud around the fire.</p>
+      </div>
+
+      <!-- Random button -->
+      <button class="lib-random-btn" onclick="fireRandomQuestion()">🎲 Surprise me — give me a random question</button>
+
+      <!-- Filter chips -->
+      <div class="lib-filter-row" id="lib-filters"></div>
+
+      <!-- Question list -->
+      <div id="lib-question-list"></div>
+    </div>
 
     <div class="home-footer">
       <button class="change-key" onclick="showEntry()">Change API key or mode</button>
@@ -999,6 +1231,18 @@ const THEMES = {
       "That's fair, and I want to sit with it rather than deflect. You're right that a lot of the conventional path I followed was built on conditions that no longer exist — cheaper housing, more stable employment, less information overload. I don't think I can hand you a map because the terrain genuinely changed. But I'm curious: what would useful guidance from someone my age actually look like to you?",
       "Honestly — yes. There are places I've failed, and I think about them. The question is whether I learned enough from them to be worth anything to you now. I don't want to be the person who gets defensive when they're questioned. What's the thing you actually needed that you didn't get?",
     ]
+  },
+  _open: {
+    label: "Open Questions",
+    desc: "Exploring a question from the library",
+    icon: "✨",
+    color: "#C4A870",
+    system: `You are a warm, open-minded, and genuinely curious conversation partner. Someone has chosen a big open question to explore. Your job is to help them think it through — not to give answers, but to ask follow-up questions, offer different angles, and create space for honest reflection. You're curious rather than directive. You don't moralize. You ask one follow-up question at the end of each response. Keep responses to 3-4 sentences — create space rather than fill it.`,
+    sparks: [],
+    demos: [
+      "That's a question that opens up differently depending on where you are in life. What comes up for you first when you sit with it — not the 'correct' answer, but the honest one?",
+      "Worth exploring carefully. Most people have a quick answer and a slower, truer one underneath it. What does it look like for you specifically — in your actual life, not in theory?",
+    ]
   }
 };
 
@@ -1009,6 +1253,242 @@ const ROTATING_QUESTIONS = [
   "What's the most honest thing you could say right now?",
   "Where are you holding back?",
 ];
+
+// ─── SPARK LIBRARY DATA ───────────────────────────────
+const SPARK_LIBRARY = [
+  {
+    category: "Life & The Big Picture",
+    icon: "🌍",
+    vibe: "both",
+    questions: [
+      "If your life was a story, what chapter are you in right now?",
+      "What does a life well-lived look like to you — not to your parents, not to Instagram — to you?",
+      "What's something most people around you believe that you're quietly not sure about?",
+      "If you could change one thing about the world you're inheriting, what would it be?",
+      "What are you building — even slowly — that you're proud of?",
+      "What does success feel like, as opposed to what it looks like?",
+    ]
+  },
+  {
+    category: "Relationships & Connection",
+    icon: "🤝",
+    vibe: "both",
+    questions: [
+      "Who in your life tells you the truth — and do you actually listen when they do?",
+      "What do you find hardest to say to the people you're closest to?",
+      "Are you the kind of friend you'd want to have?",
+      "What does real loyalty look like — and where have you seen it actually tested?",
+      "How do you handle conflict — honestly?",
+      "What's one relationship in your life you'd like to show up differently in?",
+    ]
+  },
+  {
+    category: "Fear & Courage",
+    icon: "🦁",
+    vibe: "group",
+    questions: [
+      "What's the bravest thing you've done in the last year that no one else knows about?",
+      "What are you afraid of that you've never said out loud?",
+      "Where in your life are you playing it safe when you know you shouldn't be?",
+      "What would you do if you knew you couldn't fail — and what does that tell you?",
+      "What's a risk you haven't taken yet that you think you should?",
+      "What's the difference between being careful and being afraid?",
+    ]
+  },
+  {
+    category: "Identity & Self-Knowledge",
+    icon: "🪞",
+    vibe: "solo",
+    questions: [
+      "Who are you when no one is watching?",
+      "What parts of yourself do you hide from people — and why?",
+      "What do you value most that you rarely talk about?",
+      "What's a story you tell yourself about yourself that might not be true?",
+      "What do people get wrong about you — and what do they get right?",
+      "What version of yourself are you most proud of, and how often do they show up?",
+    ]
+  },
+  {
+    category: "The World & Your Place In It",
+    icon: "🧭",
+    vibe: "group",
+    questions: [
+      "What problem in the world do you actually care about — not the one you're supposed to?",
+      "What does your generation do better than the ones before it?",
+      "Where do you think society is getting it badly wrong right now?",
+      "What's something older generations misunderstand about what it's like to be young today?",
+      "What does community mean to you — and do you have it?",
+      "If you had real power to change one thing, where would you start?",
+    ]
+  },
+  {
+    category: "Growth & Change",
+    icon: "🌱",
+    vibe: "both",
+    questions: [
+      "What habit or pattern do you keep returning to even though you know it doesn't serve you?",
+      "What does the version of you in 10 years need you to start doing now?",
+      "What's something you've outgrown but haven't let go of yet?",
+      "When did you last genuinely change your mind about something important?",
+      "What would it mean to grow up — and are you doing it?",
+      "What are you waiting for permission to start?",
+    ]
+  },
+  {
+    category: "Around the Fire Pit",
+    icon: "🔥",
+    vibe: "group",
+    questions: [
+      "What's the best advice you've ever received — and did you take it?",
+      "What do you know now that you wish you'd known at 18?",
+      "What's something you believe in deeply that you'd stand up for even if it cost you?",
+      "What's a question you've never been asked that you wish someone would ask you?",
+      "What's the most honest thing you could say in this room right now?",
+      "If everyone here left tonight with one thing to think about, what would you want it to be?",
+    ]
+  },
+  {
+    category: "Quiet Reflection",
+    icon: "🌙",
+    vibe: "solo",
+    questions: [
+      "What are you grateful for that you don't say enough?",
+      "Where do you feel most like yourself?",
+      "What does rest actually feel like for you — when did you last have it?",
+      "What would you regret most if things stayed exactly as they are?",
+      "What do you need right now that you're not asking for?",
+      "What's something beautiful you noticed this week?",
+    ]
+  },
+];
+
+// ─── TAB SWITCHING ────────────────────────────────────
+function switchTab(name, btn) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('tab-' + name).classList.add('active');
+}
+
+// ─── SPARK LIBRARY RENDER ─────────────────────────────
+let activeLibFilter = 'all';
+
+function renderSparkLibrary() {
+  renderLibFilters();
+  renderLibQuestions();
+}
+
+function renderLibFilters() {
+  const row = document.getElementById('lib-filters');
+  const filters = [
+    { key: 'all', label: 'All questions' },
+    { key: 'group', label: '🔥 Group / Fire Pit' },
+    { key: 'solo', label: '🌙 Solo Reflection' },
+    { key: 'both', label: '✨ Works Both Ways' },
+  ];
+  row.innerHTML = filters.map(f => `
+    <button class="lib-filter ${activeLibFilter === f.key ? 'active' : ''}"
+      onclick="setLibFilter('${f.key}')">${f.label}</button>
+  `).join('');
+}
+
+function setLibFilter(key) {
+  activeLibFilter = key;
+  renderLibFilters();
+  renderLibQuestions();
+}
+
+function renderLibQuestions() {
+  const container = document.getElementById('lib-question-list');
+  const vibeLabels = { group: 'Group', solo: 'Solo', both: 'Group & Solo' };
+  const vibeTag = (v) => `<span class="lib-cat-tag ${v}">${vibeLabels[v]}</span>`;
+
+  const filtered = SPARK_LIBRARY.filter(cat =>
+    activeLibFilter === 'all' || cat.vibe === activeLibFilter
+  );
+
+  if (!filtered.length) {
+    container.innerHTML = `<p style="color:var(--fade);font-style:italic;text-align:center;padding:32px 0">No questions in this filter.</p>`;
+    return;
+  }
+
+  container.innerHTML = filtered.map(cat => `
+    <div class="lib-category">
+      <div class="lib-cat-header">
+        <span class="lib-cat-icon">${cat.icon}</span>
+        <span class="lib-cat-label">${cat.category}</span>
+        ${vibeTag(cat.vibe)}
+      </div>
+      <div class="lib-questions">
+        ${cat.questions.map(q => `
+          <button class="lib-q" onclick="openSpotlight(${JSON.stringify(q).replace(/"/g, '&quot;')}, '${cat.category}')">
+            <span class="lib-q-text">${q}</span>
+            <span class="lib-q-action">Explore →</span>
+          </button>
+        `).join('')}
+      </div>
+    </div>
+  `).join('');
+}
+
+function fireRandomQuestion() {
+  const all = SPARK_LIBRARY.flatMap(c => c.questions.map(q => ({ q, cat: c.category })));
+  const pick = all[Math.floor(Math.random() * all.length)];
+  openSpotlight(pick.q, pick.cat);
+}
+
+function openSpotlight(question, category) {
+  const backdrop = document.createElement('div');
+  backdrop.className = 'modal-backdrop';
+  backdrop.innerHTML = `
+    <div class="spotlight-modal">
+      <button class="modal-close" onclick="this.closest('.modal-backdrop').remove()">✕</button>
+      <div style="font-size:0.68rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--dim);margin-bottom:14px">${category}</div>
+      <div class="spotlight-q">"${question}"</div>
+      <div class="spotlight-actions">
+        <button class="spotlight-btn-ai" onclick="goDeeper(${JSON.stringify(question).replace(/"/g, '&quot;')})">
+          💬 Go deeper with AI
+        </button>
+        <button class="spotlight-btn-share" onclick="shareQuestion(${JSON.stringify(question).replace(/"/g, '&quot;')})">
+          📲 Share this question
+        </button>
+      </div>
+      <p class="spotlight-hint">Or just read it out loud. Some questions work best without an answer.</p>
+    </div>
+  `;
+  document.body.appendChild(backdrop);
+  backdrop.addEventListener('click', e => { if (e.target === backdrop) backdrop.remove(); });
+}
+
+function goDeeper(question) {
+  // Close any modals
+  document.querySelectorAll('.modal-backdrop').forEach(m => m.remove());
+  // Open chat with the open questions system and this question pre-loaded
+  activeTheme = '_open';
+  chatHistory = [];
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('chat-screen').classList.add('active');
+
+  // Set header
+  document.getElementById('chat-title').textContent = '✨  Open Questions';
+  document.getElementById('chat-sub').textContent = 'Exploring a question from the library';
+  document.getElementById('chat-header').style.borderBottomColor = '#C4A87044';
+  updateShareBtn();
+
+  renderEmpty();
+  // Pre-fill and send
+  setTimeout(() => sendMessage(question), 100);
+}
+
+async function shareQuestion(question) {
+  const text = `🔥 Fire Pit question:\n\n"${question}"`;
+  if (navigator.share) {
+    try { await navigator.share({ text }); } catch(e) {}
+  } else {
+    const encoded = encodeURIComponent(text);
+    window.open(`https://wa.me/?text=${encoded}`, '_blank');
+  }
+}
 
 // ─── ENTRY SCREEN ────────────────────────────────────
 document.getElementById('toggle-vis').addEventListener('click', () => {
@@ -1087,7 +1567,7 @@ function renderHome() {
   // Theme list
   const list = document.getElementById('theme-list');
   list.innerHTML = '';
-  Object.entries(THEMES).forEach(([key, theme]) => {
+  Object.entries(THEMES).filter(([k]) => k !== '_open').forEach(([key, theme]) => {
     const card = document.createElement('button');
     card.className = 'theme-card';
     card.style.setProperty('--tc', theme.color);
@@ -1102,6 +1582,8 @@ function renderHome() {
     card.onclick = () => openChat(key);
     list.appendChild(card);
   });
+
+  renderSparkLibrary();
 }
 
 // ─── CHAT SCREEN ─────────────────────────────────────
@@ -1131,9 +1613,9 @@ function renderEmpty() {
       <div class="empty-title">Start the conversation</div>
       <div class="empty-desc">Ask anything. Challenge anything. Say what's actually on your mind.</div>
       ${isDemoMode ? `<div class="demo-notice">Demo mode: responses are curated examples, not live AI.<br>Add an API key to unlock full conversation.</div>` : ''}
-      <div class="spark-list">
+      ${t.sparks && t.sparks.length ? `<div class="spark-list">
         ${t.sparks.map(s => `<button class="spark-btn" onclick="sendSpark(this.textContent)">${s}</button>`).join('')}
-      </div>
+      </div>` : ''}
     </div>
   `;
 }
@@ -1157,9 +1639,9 @@ function sendSpark(text) {
   sendMessage();
 }
 
-async function sendMessage() {
+async function sendMessage(prefill) {
   const input = document.getElementById('msg-input');
-  const text = input.value.trim();
+  const text = prefill || input.value.trim();
   if (!text || isLoading) return;
 
   input.value = '';
